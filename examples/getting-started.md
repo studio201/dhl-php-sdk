@@ -3,7 +3,7 @@
 ## Install the Project
 - **With** [Composer](https://getcomposer.org/): `composer require petschko/dhl-php-sdk`
 
-- **Without** Composer: [Download the newest Version](https://github.com/Petschko/dhl-php-sdk/releases) and put it manually to your Project
+- **Without** Composer: [Download the newest Version](https://github.com/kruegge82/dhl-php-sdk/releases) and put it manually to your Project
 
 ## Include the Project
 
@@ -23,7 +23,7 @@ That's it, now you can start to do all the Configuration for you DHL-Logic (Expl
 
 ## Usage
 
-_This is just a very basic Tutorial how you can use the DHL-PHP-SDK, I will add more tutorials & examples to the [example](https://github.com/Petschko/dhl-php-sdk/tree/master/examples) to the directory._
+_This is just a very basic Tutorial how you can use the DHL-PHP-SDK, I will add more tutorials & examples to the [example](https://github.com/kruegge82/dhl-php-sdk/tree/master/examples) to the directory._
 
 First you need to setup your DHL-Credentials:
 
@@ -112,7 +112,6 @@ $shipper->setName1((string) 'Organisation Petschko'); // Can be a Person-Name or
 // Example Full Address: "Oberer Landweg 12a"
 $shipper->setAddressStreet((string) 'Oberer Landweg');
 $shipper->setAddressHouse((string) '12a'); // A Number is ALWAYS needed
-
 $shipper->setPostalCode((string) '21035');
 $shipper->setCity((string) 'Hamburg');
 $shipper->setCountry((string) 'DEU'); // 3 Chars ONLY
@@ -146,20 +145,16 @@ $consignee = new \Jahn\DHL\Consignee();
 Setup all **Required** Information
 
 ```php
-$consignee->setName1((string) 'Organisation Petschko'); // Can be a Person-Name or Company Name
+$consignee->setName1((string) 'Organisation Name'); // Can be a Person-Name or Company Name
 
 // You need to seperate the StreetName from the Number and set each one to its own setter
 // Example Full Address: "Oberer Landweg 12a"
 $consignee->setAddressStreet((string) 'Oberer Landweg');
 $consignee->setAddressHouse((string) '12a'); // A Number is ALWAYS needed
-
 $consignee->setPostalCode((string) '21035');
 $consignee->setCity((string) 'Hamburg');
 $consignee->setCountry((string) 'DEU'); // 3 Chars ONLY
 ```
-
-
-
 
 ##### `\Jahn\DHL\Services` Object
 
@@ -167,7 +162,7 @@ You can also setup more details for your Shipment by using the `\Jahn\DHL\Servic
 
 I'll not explain the Service-Object because there are too many settings. Please look into the Service-PHP-File by yourself. The fields are well documented.
 
-##### `\Jahn\DHL\Customs` & `\Jahn\DHL\ExportDocPosition` Object(s)
+##### `\Jahn\DHL\Customs` & `\Jahn\DHL\ExportDocPosition` Item(s)
 
 Sometimes you need to create a Export-Document, in that case you need these both Objects. Please inform yourself what you need to do here.
 
@@ -181,9 +176,9 @@ $details->setWeightValue(3); // Value of weight
 
 // optional set package Dimesnions
 $details->setDimUom("cm");
-$details->setDimHeight("10");
-$details->setDimLength("20");
-$details->setDimWidth("20");
+$details->setDimHeight(10);
+$details->setDimLength(20);
+$details->setDimWidth(20);
 ```
 ##### `\Jahn\DHL\LabelFormat` Object
 Defines the Label Format and Document Type
@@ -192,6 +187,10 @@ $labelFormat = new LabelFormat();
 $labelFormat->setLabelFormat("910-300-600");
 //$labelFormat->setLabelFormatRetoure("910-300-610"); // if return label
 $labelFormat->setCombinedPrinting(true); // if true return label and return label in one Document
+$labelFormat->setLabelResponseType('INCLUDE');  // INCLUDE or URL
+$labelFormat->setDocFormat("PDF"); // set type or the Documents PDF or ZPL2
+
+
 ```
 
 ```php
@@ -253,28 +252,6 @@ $shipments->setCustoms($customs); \Jahn\DHL\Customs Object
 
 ```
 
-##### `\Jahn\DHL\ShipmentOrder` Object
-
-Now you need to create the ShipmentOrder, which is explained here. First we need to create the Object
-
-```php
-$shipmentOrder = new \Jahn\DHL\ShipmentOrder();
-```
-
-This is the main Object of our Shipment, so we need to add all Child-Object to it. These are **Required**
-
-
-```php
-// Add all the required informations from previous Objects
-$shipmentOrder = new \Jahn\DHL\ShipmentOrder();
-$shipmentOrder->setLabelResponseType('INCLUDE');  // INCLUDE or URL
-$shipmentOrder->setProfile('STANDARD_GRUPPENPROFIL'); // Optional Default: STANDARD_GRUPPENPROFIL
-$shipmentOrder->setPrintOnlyIfReceiverIsValid('false'); // Only validated Shipments shoud be executed
-$shipmentOrder->setDocFormat("PDF"); // set type or the Documents PDF or ZPL2
-$shipmentOrder->setLabelFormat($labelFormat); \Jahn\DHL\LabelFormat Object
-$shipmentOrder->setShipments($shipments); \Jahn\DHL\Shipments Object //You can add multiple shipments in one call (up to 30)
-```
-
 ##### `\Jahn\DHL\BusinessShipment` Object
 
 Finally you can add all together. You have to create the `\Jahn\DHL\BusinessShipment` Object
@@ -291,15 +268,11 @@ Finally you can add all together. You have to create the `\Jahn\DHL\BusinessShip
 */
 $dhl = new \Jahn\DHL\BusinessShipment($credentials);
 $dhl->setProfile('STANDARD_GRUPPENPROFIL'); // Optional Default: STANDARD_GRUPPENPROFIL
+$dhl->setPrintOnlyIfReceiverIsValid('false'); // Only validated Shipments shoud be executed
+$dhl->setLabelFormat($labelFormat); \Jahn\DHL\LabelFormat Object
+$dhl->setShipments($shipments); \Jahn\DHL\Shipments Object //You can add multiple shipments in one call (up to 30)
 
 ```
-
-Here you can add the ShipmentOrder:
-
-````php
-// Add all Required (For a CREATE-Shipment-Request) Classes
-$dhl->addShipmentOrder($shipmentOrder);
-````
 
 #### Create the Request
 
@@ -328,16 +301,6 @@ if($response === false) {
 ```
 
 You can get several Information from the `\Jahn\DHL\Response` Object. Please have a look down where I describe the `\Jahn\DHL\Response` Class.
-
-exit;
-### Update a Shipment
-
-It works the same like creating a Shipment, but you need to specify the Shipment number, you want to update! You call this
-request via `$dhl->updateShipmentOrder($shipmentNumber)`.
-```php
-	$dhl->updateShipmentOrder((string) $shipmentNumber)
-```
-
 
 ### Delete one or multiple Shipment(s)
 
@@ -397,13 +360,13 @@ Same like deleting, re-getting Labels is not this hard. You can simply re-get La
 $dhl = new \Jahn\DHL\BusinessShipment($credentials);
 
 // This is the only setting you can do here: (Change Label-Response Type) - Optional
-$dhl->setLabelResponseType((string) \Jahn\DHL\BusinessShipment::RESPONSE_TYPE_B64); // Default: null -> DHL-Default
+$dhl->setLabelFormat($labelFormat); // Class ob LabelFormat
 
 // And here comes the Request for ONE Shipment
 $response = $dhl->getShipmentLabel((string) 'shipment_number');
 
 // And for MULTI-Requests (up to 30)
-$response = $dhl->getShipmentLabel((array) array('shipment_number1', 'shipment_number2'));
+$response = $dhl->getShipmentLabel(array('shipment_number1', 'shipment_number2'));
 ```
 
 If the request failed, you get `false` as usual else a `\Jahn\DHL\Response` Object.
@@ -434,10 +397,10 @@ It works like deleting Shipments:
 $dhl = new \Jahn\DHL\BusinessShipment($credentials);
 
 // Do the Manifest-Request for ONE Shipment
-$response = $dhl->doManifest((string) 'shipment_number');
+$response = $dhl->doManifest(null, $credentials->getEkp(10) . '0102');  // Does Manifest all open Shipments
 
 // MULTI-Request (up to 30)
-$response = $dhl->doManifest((array) array('shipment_number1', 'shipment_number2'));
+$response = $dhl->doManifest(array('shipment_number1', 'shipment_number2'), $credentials->getEkp(10) . '0102')); // Does Manifest specified Shipments
 ```
 
 If the request failed, you get `false` else a `\Jahn\DHL\Response` Object.
@@ -466,7 +429,7 @@ The syntax is quite simple, you just need to specify the date where you want to 
 $dhl = new \Jahn\DHL\BusinessShipment($credentials);
 
 // Request to get the manifest from a specific date, the date can be given with an ISO-Date String (YYYY-MM-DD) or with the `time()` value of the day
-$response = $dhl->getManifest('2018-08-06');
+$response = $dhl->getManifest('2018-08-06', $credentials->getEkp(10) . '0102');
 ```
 
 If the request failed, you get `false` else a `\Jahn\DHL\Response` Object.
@@ -487,7 +450,7 @@ I will explain which values you can get from the Response-Object
 (string) $response->getStatusMessage(); // Returns the Status-Message (More details) or null
 
 // You can get the "getManifest"-Data always by using this function after the getManifest call
-(string) $response->getManifestData(); // Returns the Manifest PDF-Data as Base64 String (Can be obtained via getManifest) or null
+(string) $response->getManifestData(); // Returns the Manifest PDF-Data array with definde LabelFormat Information (Can be obtained via getManifest) or null
 
 // You can still use these for SINGLE-Requests
 (string) $response->getShipmentNumber(); // Returns the Shipment-Number of the Request or null

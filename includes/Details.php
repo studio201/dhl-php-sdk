@@ -51,19 +51,19 @@ class Details {
 
 	/**
 	 *
-	 * @var string|null
+	 * @var float|null
 	 */
 	private $height = null;
 
 	/**
 	 *
-	 * @var string|null
+	 * @var float|null
 	 */
 	private $width = null;
 
 	/**
 	 *
-	 * @var string|null
+	 * @var float|null
 	 */
 	private $length = null;
 
@@ -74,17 +74,17 @@ class Details {
 	private $weight = null;
 
 	/**
-	 * @return string|null
+	 * @return float|null
 	 */
-	public function getWeightValue(): ?string
+	public function getWeightValue(): ?float
 	{
 		return $this->value;
 	}
 
 	/**
-	 * @param string|null $value
+	 * @param float|null $value
 	 */
-	public function setWeightValue(?string $value): void
+	public function setWeightValue(?float $value): void
 	{
 		$this->value = $value;
 	}
@@ -102,7 +102,7 @@ class Details {
 	 */
 	public function setWeightUom(?string $uom): void
 	{
-		$this->uom = $uom;
+		$this->uom = mb_strtolower($uom);
 	}
 
 
@@ -116,53 +116,53 @@ class Details {
 	 */
 	public function setDimUom(?string $uom): void
 	{
-		$this->uom = $uom;
+		$this->uom = mb_strtolower($uom);
 	}
 
 	/**
-	 * @return string|null
+	 * @return float|null
 	 */
-	public function getDimHeight(): ?string
+	public function getDimHeight(): ?float
 	{
 		return $this->height;
 	}
 
 	/**
-	 * @param string|null $height
+	 * @param float|null $height
 	 */
-	public function setDimHeight(?string $height): void
+	public function setDimHeight(?float $height): void
 	{
 		$this->height = $height;
 	}
 
 	/**
-	 * @return string|null
+	 * @return float|null
 	 */
-	public function getDimLength(): ?string
+	public function getDimLength(): ?float
 	{
 		return $this->length;
 	}
 
 	/**
-	 * @param string|null $length
+	 * @param float|null $length
 	 */
-	public function setDimLength(?string $length): void
+	public function setDimLength(?float $length): void
 	{
 		$this->length = $length;
 	}
 
 	/**
-	 * @return string|null
+	 * @return float|null
 	 */
-	public function getDimWidth(): ?string
+	public function getDimWidth(): ?float
 	{
 		return $this->width;
 	}
 
 	/**
-	 * @param string|null $width
+	 * @param float|null $width
 	 */
-	public function setDimWidth(?string $width): void
+	public function setDimWidth(?float $width): void
 	{
 		$this->width = $width;
 	}
@@ -203,17 +203,17 @@ class Details {
 	}
 
 	/**
-	 * @return string|null
+	 * @return float|null
 	 */
-	public function getWeight(): ?string
+	public function getWeight(): ?float
 	{
 		return $this->weight;
 	}
 
 	/**
-	 * @param string|null $weight
+	 * @param float|null $weight
 	 */
-	public function setWeight(?string $weight): void
+	public function setWeight(?float $weight): void
 	{
 		$this->weight = $weight;
 	}
