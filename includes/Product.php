@@ -1,10 +1,11 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
  * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 10.06.2017
  * Time: 19:34
  *
@@ -14,7 +15,7 @@ namespace Petschko\DHL;
 /**
  * Class Product
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  */
 class Product {
 	/**
@@ -117,7 +118,7 @@ class Product {
 	 *
 	 * @param string $type - Product-Type
 	 */
-	private function setType($type) {
+	public function setType($type) {
 		$this->type = $type;
 	}
 
@@ -127,16 +128,16 @@ class Product {
 	 * @return string - Name
 	 */
 	public function getName() {
-		return $this->name;
+		return $this->name1;
 	}
 
 	/**
 	 * Set the Name
 	 *
-	 * @param string $name - Name
+	 * @param string $name1 - Name
 	 */
-	public function setName($name) {
-		$this->name = $name;
+	public function setName1($name1) {
+		$this->name1 = $name1;
 	}
 
 	/**

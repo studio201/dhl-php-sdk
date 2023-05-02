@@ -2,20 +2,21 @@
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
  * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 09.06.2019
  * Time: 16:05
  *
  * Notes: Contains the class for the Label-Format
  */
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 use stdClass;
 
 /**
  * Class LabelFormat
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  * @since 3.0
  */
 class LabelFormat {
@@ -37,15 +38,6 @@ class LabelFormat {
 	const FORMAT_910_300_710 = '910-300-710';
 
 	/**
-	 * Contains the Group-Profile name - Choose between multiple user groups.
-	 *
-	 * Note: Optional
-	 *
-	 * @var string|null $groupProfileName - Group-Profile name (null uses default)
-	 */
-	private $groupProfileName = null;
-
-	/**
 	 * Contains the Label-Format
 	 *
 	 * Note: Optional
@@ -60,7 +52,7 @@ class LabelFormat {
 	 *
 	 * @var string|null $labelFormat - Label-Format (null uses default)
 	 */
-	private $labelFormat = null;
+	private $labelFormat = '910-300-600';
 
 	/**
 	 * Contains the Return-Label-Format
@@ -76,7 +68,7 @@ class LabelFormat {
 	 *
 	 * @var string|null $labelFormatRetoure - Return-Label-Format (null uses default)
 	 */
-	private $labelFormatRetoure = null;
+	private $labelFormatRetoure = '910-300-600';
 
 	/**
 	 * Contains if Shipment label and return label get printed together
@@ -85,34 +77,32 @@ class LabelFormat {
 	 *
 	 * @var bool|null $combinedPrinting - Are both labels printed together (null uses default)
 	 */
-	private $combinedPrinting = null;
+	private $combinedPrinting = true;
+
 
 	/**
-	 * Has no use currently
+	 * Contains the Sender-Object
+	 *
+	 * Note: Optional IF ShipperReference is given (Since 3.0)
+	 **/
+	private $docFormat = 'PDF';
+
+	/**
+	 * Contains if how the Label-Response-Type will be
 	 *
 	 * Note: Optional
 	 *
-	 * @var string|null $feederSystem - Unused
-	 */
-	private $feederSystem = null;
-
-	/**
-	 * Get the Group-Profile name - Choose between multiple user groups
+	 * Values:
+	 * RESPONSE_TYPE_URL -> Url
+	 * RESPONSE_TYPE_B64 -> Base64
+	 * RESPONSE_TYPE_XML -> XML (since 3.0)
+	 * RESPONSE_TYPE_ZPL2 -> ZPL2 (since 3.0)
 	 *
-	 * @return string|null - Group-Profile name | null uses default from DHL
+	 * @var string|null $labelResponseType - Label-Response-Type (Can use class constance's) (null uses default - Url|GUI - since 3.0)
 	 */
-	public function getGroupProfileName(): ?string {
-		return $this->groupProfileName;
-	}
+	private $labelResponseType = 'include';
 
-	/**
-	 * Set the Group-Profile name - Choose between multiple user groups
-	 *
-	 * @param string|null $groupProfileName - Group-Profile name | null uses default from DHL
-	 */
-	public function setGroupProfileName(?string $groupProfileName): void {
-		$this->groupProfileName = $groupProfileName;
-	}
+
 
 	/**
 	 * Get the Label-Format
@@ -168,22 +158,37 @@ class LabelFormat {
 		$this->combinedPrinting = $combinedPrinting;
 	}
 
+
 	/**
-	 * Get the FeederSystem value - Unused
-	 *
-	 * @return string|null - Unused | null uses default from DHL
+	 * @return string
 	 */
-	private function getFeederSystem(): ?string {
-		return $this->feederSystem;
+	public function getDocFormat(): string
+	{
+		return $this->docFormat;
 	}
 
 	/**
-	 * Set the FeederSystem value - Unused
-	 *
-	 * @param string|null $feederSystem - Unused | null uses default from DHL
+	 * @param string $docFormat
 	 */
-	private function setFeederSystem(?string $feederSystem): void {
-		$this->feederSystem = $feederSystem;
+	public function setDocFormat(string $docFormat): void
+	{
+		$this->docFormat = $docFormat;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getLabelResponseType(): ?string
+	{
+		return $this->labelResponseType;
+	}
+
+	/**
+	 * @param string|null $labelResponseType
+	 */
+	public function setLabelResponseType(?string $labelResponseType): void
+	{
+		$this->labelResponseType = $labelResponseType;
 	}
 
 	/**
@@ -206,17 +211,26 @@ class LabelFormat {
 	 * @since 3.0
 	 */
 	public function addLabelFormatClass_v3($classToExtend) {
-		if($this->getGroupProfileName() !== null)
-			$classToExtend->groupProfileName = $this->getGroupProfileName();
 		if($this->getLabelFormat() !== null)
 			$classToExtend->labelFormat = $this->getLabelFormat();
 		if($this->getLabelFormatRetoure() !== null)
 			$classToExtend->labelFormatRetoure = $this->getLabelFormatRetoure();
 		if($this->getCombinedPrinting() !== null)
 			$classToExtend->combinedPrinting = $this->getCombinedPrintingLabel();
-		if($this->getFeederSystem() !== null)
-			$classToExtend->feederSystem = $this->getFeederSystem();
 
 		return $classToExtend;
 	}
+		public function labelFormatClass_v3() {
+
+			$class= new stdclass;
+			if($this->getLabelFormat() !== null)
+				$class->labelFormat = $this->getLabelFormat();
+			if($this->getLabelFormatRetoure() !== null)
+				$class->labelFormatRetoure = $this->getLabelFormatRetoure();
+			if($this->getCombinedPrinting() !== null)
+				$class->combinedPrinting = $this->getCombinedPrintingLabel();
+
+			return $class;
+	}
+
 }

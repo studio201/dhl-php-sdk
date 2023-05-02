@@ -1,10 +1,11 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
  * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 26.01.2017
  * Time: 18:06
  *
@@ -16,7 +17,7 @@ use stdClass;
 /**
  * Class IdentCheck
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  */
 class IdentCheck {
 	/**
@@ -90,7 +91,7 @@ class IdentCheck {
 	 *
 	 * @param string $lastName - Last-Name
 	 */
-	private function setLastName($lastName) {
+	public function setLastName($lastName) {
 		$this->lastName = $lastName;
 	}
 
@@ -108,7 +109,7 @@ class IdentCheck {
 	 *
 	 * @param string $firstName - First-Name
 	 */
-	private function setFirstName($firstName) {
+	public function setFirstName($firstName) {
 		$this->firstName = $firstName;
 	}
 
@@ -126,7 +127,7 @@ class IdentCheck {
 	 *
 	 * @param string $birthday - Birthday
 	 */
-	private function setBirthday($birthday) {
+	public function setBirthday($birthday) {
 		$this->birthday = $birthday;
 	}
 
@@ -144,7 +145,7 @@ class IdentCheck {
 	 *
 	 * @param int $minimumAge - Minimum Age
 	 */
-	private function setMinimumAge($minimumAge) {
+	public function setMinimumAge($minimumAge) {
 		$this->minimumAge = $minimumAge;
 	}
 
@@ -154,23 +155,14 @@ class IdentCheck {
 	 * @return StdClass - Ident-DHL-Class
 	 * @since 2.0
 	 */
-	public function getIdentClass_v2() {
+	public function getIdentClass_v3() {
 		$class = new StdClass;
-		$class->surname = $this->getLastName();
-		$class->givenName = $this->getFirstName();
-		$class->dateOfBirth = $this->getBirthday();
+		$class->firstName = $this->getLastName();
+		$class->lastName = $this->getFirstName();
+		if($this->getBirthday() !== null)
+			$class->birthday = $this->getBirthday();
 		$class->minimumAge = $this->getMinimumAge();
 
 		return $class;
-	}
-
-	/**
-	 * Get the Ident-DHL-Class
-	 *
-	 * @return StdClass - Ident-DHL-Class
-	 * @since 3.0
-	 */
-	public function getIdentClass_v3() {
-		return $this->getIdentClass_v2();
 	}
 }

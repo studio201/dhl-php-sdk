@@ -1,30 +1,22 @@
 {
-    "name": "petschko/dhl-php-sdk",
-    "description": "DHL SDK",
+    "name": "kruegge82/dhl-php-sdk",
+    "description": "DHL SDK REST API for developer.dhl.com",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "Peter Dragicevic",
-            "email": "peter@petschko.org",
-            "homepage": "http://petschko.org/",
+            "name": "Jahn N.",
             "role": "developer"
         }
     ],
-    "support": {
-        "email": "peter@petschko.org",
-        "issues": "https://github.com/Petschko/dhl-php-sdk/issues",
-        "source": "https://github.com/Petschko/dhl-php-sdk",
-        "docs": "http://docs.petschko.org/dhl-php-sdk/index.html"
-    },
     "require": {
-        "php": ">=7.2.0",
-        "ext-soap": "*",
-        "ext-mbstring": "*"
+        "php": ">=7.4.0",
+        "ext-mbstring": "*",
+        "ext-curl": "*"
     },
     "autoload": {
         "psr-4": {
-            "Petschko\\DHL\\": "includes/"
+            "Jahn\\DHL\\": "includes/"
         }
     }
 }

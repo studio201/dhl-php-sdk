@@ -1,6 +1,6 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Maximilian Stark [mail@dakror.de]
@@ -14,7 +14,7 @@ namespace Petschko\DHL;
 /**
  * Class ProductInfo
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  */
 class ProductInfo {
 	/**
@@ -29,7 +29,7 @@ class ProductInfo {
 	 *
 	 * @var string[] $serviceNames - Service-Names
 	 */
-	public static $serviceNames = array(
+	private static $serviceNames = array(
 		'preferredNeighbourEnabled' => 'Wunschnachbar',
 		'preferredLocationEnabled' => 'Wunschort',
 		'visualCheckOfAgeEnabled' => 'Alterssichtprüfung',
@@ -66,12 +66,12 @@ class ProductInfo {
 	/**
 	 * Disabled Clone-Function
 	 */
-	private function __clone() { /* VOID */ }
+	public function __clone() { /* VOID */ }
 
 	/**
 	 * Disabled ProductInfo constructor.
 	 */
-	private function __construct() { /* VOID */ }
+	public function __construct() { /* VOID */ }
 
 	/**
 	 * Initiates the Class
@@ -80,7 +80,7 @@ class ProductInfo {
 		self::setInit(true);
 
 		// Initiates Products
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_NATIONAL_PACKAGE);
+		$obj = new Product(Shipments::PRODUCT_TYPE_NATIONAL_PACKAGE);
 		$obj->setName('DHL Paket');
 		$obj->setMinLength(15);
 		$obj->setMaxLength(200);
@@ -109,7 +109,7 @@ class ProductInfo {
 		));
 		self::addProduct($obj);
 
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_NATIONAL_PACKAGE_PRIO);
+		$obj = new Product(Shipments::PRODUCT_TYPE_NATIONAL_PACKAGE_PRIO);
 		$obj->setName('DHL Paket PRIO');
 		$obj->setMinLength(15);
 		$obj->setMaxLength(200);
@@ -136,7 +136,7 @@ class ProductInfo {
 		));
 		self::addProduct($obj);
 
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_SAME_DAY_PACKAGE);
+		$obj = new Product(Shipments::PRODUCT_TYPE_SAME_DAY_PACKAGE);
 		$obj->setName('DHL Paket Taggleich');
 		$obj->setMinLength(15);
 		$obj->setMaxLength(200);
@@ -165,7 +165,7 @@ class ProductInfo {
 		));
 		self::addProduct($obj);
 
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_INTERNATIONAL_PACKAGE);
+		$obj = new Product(Shipments::PRODUCT_TYPE_INTERNATIONAL_PACKAGE);
 		$obj->setName('DHL Paket International');
 		$obj->setMinLength(15);
 		$obj->setMaxLength(120);
@@ -185,7 +185,7 @@ class ProductInfo {
 		));
 		self::addProduct($obj);
 
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_EUROPA_PACKAGE);
+		$obj = new Product(Shipments::PRODUCT_TYPE_EUROPA_PACKAGE);
 		$obj->setName('DHL Europapaket');
 		$obj->setMinLength(15);
 		$obj->setMaxLength(120);
@@ -200,7 +200,7 @@ class ProductInfo {
 		));
 		self::addProduct($obj);
 
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_PACKED_CONNECT);
+		$obj = new Product(Shipments::PRODUCT_TYPE_PACKED_CONNECT);
 		$obj->setName('DHL Paket Connect');
 		$obj->setMinLength(15);
 		$obj->setMaxLength(120);
@@ -216,7 +216,7 @@ class ProductInfo {
 		));
 		self::addProduct($obj);
 
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_SAME_DAY_MESSENGER);
+		$obj = new Product(Shipments::PRODUCT_TYPE_SAME_DAY_MESSENGER);
 		$obj->setName('DHL Kurier Taggleich');
 		$obj->setMinLength(15);
 		$obj->setMaxLength(200);
@@ -238,7 +238,7 @@ class ProductInfo {
 		));
 		self::addProduct($obj);
 
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_WISH_TIME_MESSENGER);
+		$obj = new Product(Shipments::PRODUCT_TYPE_WISH_TIME_MESSENGER);
 		$obj->setName('DHL Kurier Wunschzeit');
 		$obj->setMinLength(15);
 		$obj->setMaxLength(200);
@@ -260,7 +260,7 @@ class ProductInfo {
 		));
 		self::addProduct($obj);
 
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_AUSTRIA_PACKAGE);
+		$obj = new Product(Shipments::PRODUCT_TYPE_AUSTRIA_PACKAGE);
 		$obj->setName('DHL Paket Austria');
 		$obj->setAustria(true);
 		$obj->setMinLength(15);
@@ -277,7 +277,7 @@ class ProductInfo {
 		));
 		self::addProduct($obj);
 
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_CONNECT_PACKAGE);
+		$obj = new Product(Shipments::PRODUCT_TYPE_CONNECT_PACKAGE);
 		$obj->setName('DHL Paket Connect');
 		$obj->setAustria(true);
 		$obj->setMinLength(15);
@@ -294,7 +294,7 @@ class ProductInfo {
 		));
 		self::addProduct($obj);
 
-		$obj = new Product(ShipmentDetails::PRODUCT_TYPE_AUSTRIA_INTERNATIONAL_PACKAGE);
+		$obj = new Product(Shipments::PRODUCT_TYPE_AUSTRIA_INTERNATIONAL_PACKAGE);
 		$obj->setName('DHL Paket International');
 		$obj->setAustria(true);
 		$obj->setMinLength(15);
@@ -335,7 +335,7 @@ class ProductInfo {
 	 *
 	 * @return Product[] - DHL-Product-Objects
 	 */
-	public static function getDhlProducts() {
+	private static function getDhlProducts() {
 		if(! self::isInit())
 			self::init();
 
@@ -357,7 +357,7 @@ class ProductInfo {
 	 * @param string $productType - ProductType
 	 * @return Product|null - DHL-Product Object or null if not exists in Info-Class
 	 */
-	public static function getInfo($productType) {
+	private static function getInfo($productType) {
 		if(! self::isInit())
 			self::init();
 

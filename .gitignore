@@ -2,3 +2,6 @@
 /vendor/
 Doxyfile.conf
 testDhl.php
+/tests/
+/composer.phar
+/composer.lock

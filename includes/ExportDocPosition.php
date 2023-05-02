@@ -1,10 +1,11 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
  * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 10.04.2017
  * Time: 12:48
  *
@@ -16,7 +17,7 @@ use stdClass;
 /**
  * Class ExportDocPosition
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  *
  * Note: If min 1 value is filled out, all other values are required (else none is required)
  */
@@ -27,9 +28,9 @@ class ExportDocPosition {
 	 * Min-Len: -
 	 * Max-Len: 256
 	 *
-	 * @var string|null $description - Description of the unit / position
+	 * @var string|null $itemDescription - Description of the unit / position
 	 */
-	private $description = null;
+	private $itemDescription = null;
 
 	/**
 	 * Origin Country-ISO-Code
@@ -37,9 +38,9 @@ class ExportDocPosition {
 	 * Min-Len: 2
 	 * Max-Len: 2
 	 *
-	 * @var string|null $countryCodeOrigin - Origin Country-ISO-Code
+	 * @var string|null $countryOfOrigin - Origin Country-ISO-Code
 	 */
-	private $countryCodeOrigin = null;
+	private $countryOfOrigin = null;
 
 	/**
 	 * Customs tariff number of the unit / position
@@ -47,43 +48,45 @@ class ExportDocPosition {
 	 * Min-Len: -
 	 * Max-Len: 10
 	 *
-	 * @var string|null $customsTariffNumber - Customs tariff number of the unit / position (HS-code) or null for none
+	 * @var string|null $hsCode - Customs tariff number of the unit / position (HS-code) or null for none
 	 */
-	private $customsTariffNumber = null;
+	private $hsCode = null;
 
 	/**
 	 * Quantity of the unit / position
 	 *
-	 * @var int|null $amount - Quantity of the unit / position
+	 * @var int|null $packagedQuantity - Quantity of the unit / position
 	 */
-	private $amount = null;
+	private $packagedQuantity = null;
 
 	/**
 	 * Net weight of the unit / position
 	 *
-	 * @var float|null $netWeightInKG - Net weight of the unit / position
+	 * @var float|null $itemWeight - Net weight of the unit / position
 	 */
-	private $netWeightInKG = null;
+	private $itemWeight = null;
 
 	/**
-	 * Customs value amount of the unit / position
+	 * Customs value packagedQuantity of the unit / position
 	 *
-	 * @var float|null $customsValue - Customs value amount of the unit / position
+	 * @var float|null $itemValue - Customs value packagedQuantity of the unit / position
 	 */
-	private $customsValue = null;
+	private $itemValue = null;
 
 	/**
 	 * ExportDocPosition constructor.
 	 *
-	 * @param string $description - Description of the unit / position
-	 * @param string $countryCodeOrigin - Origin Country-ISO-Code
-	 * @param string|null $customsTariffNumber - Customs tariff number of the unit / position (HS-code) or null for none
-	 * @param int $amount - Quantity of the unit / position
-	 * @param int|float $netWeightInKG - Net weight of the unit / position
-	 * @param int|float $customsValue - Customs value amount of the unit / position
+	 * @param string $itemDescription - Description of the unit / position
+	 * @param string $countryOfOrigin - Origin Country-ISO-Code
+	 * @param string|null $hsCode - Customs tariff number of the unit / position (HS-code) or null for none
+	 * @param int $packagedQuantity - Quantity of the unit / position
+	 * @param int|float $itemWeight - Net weight of the unit / position
+	 * @param int|float $itemWeightUom - Net weight of the unit / position
+	 * @param int|float $itemValue - Customs value packagedQuantity of the unit / position
+	 * @param int|float $itemValueCurrency - Customs value packagedQuantity of the unit / position
 	 */
-	public function __construct($description, $countryCodeOrigin, $customsTariffNumber, $amount, $netWeightInKG, $customsValue) {
-		if(! $description || ! $countryCodeOrigin || ! $amount || ! $netWeightInKG || ! $customsValue) {
+	public function __construct($itemDescription, $countryOfOrigin, $hsCode, $packagedQuantity, $itemWeight, $itemWeightUom, $itemValue, $itemValueCurrency) {
+		if(! $itemDescription || ! $countryOfOrigin || ! $hsCode || ! $packagedQuantity || ! $itemWeight || ! $itemWeightUom || ! $itemValue || ! $itemValueCurrency) {
 			trigger_error('PHP-DHL-API: ' . __CLASS__ . '->' . __FUNCTION__ .
 				': All values must be filled out! (Not null, Not false, Not 0, Not "", Not empty) - Ignore this function for this call now', E_USER_WARNING);
 			error_log('PHP-DHL-API: ' . __CLASS__ . '->' . __FUNCTION__ .
@@ -91,12 +94,12 @@ class ExportDocPosition {
 			return;
 		}
 
-		$this->setDescription($description);
-		$this->setCountryCodeOrigin($countryCodeOrigin);
-		$this->setCustomsTariffNumber($customsTariffNumber);
-		$this->setAmount($amount);
-		$this->setNetWeightInKG((float) $netWeightInKG);
-		$this->setCustomsValue((float) $customsValue);
+		$this->setItemDescription($itemDescription);
+		$this->setCountryOfOrigin($countryOfOrigin);
+		$this->setHsCode($hsCode);
+		$this->setPackagedQuantity($packagedQuantity);
+		$this->setItemWeight((float) $itemWeight, $itemWeightUom);
+		$this->setItemValue((float) $itemValue, $itemValueCurrency);
 	}
 
 	/**
@@ -104,17 +107,17 @@ class ExportDocPosition {
 	 *
 	 * @return string|null - Description or null on failure
 	 */
-	public function getDescription() {
-		return $this->description;
+	public function getItemDescription() {
+		return $this->itemDescription;
 	}
 
 	/**
 	 * Set the Description
 	 *
-	 * @param string $description - Description
+	 * @param string $itemDescription - Description
 	 */
-	private function setDescription($description) {
-		$this->description = $description;
+	public function setItemDescription($itemDescription) {
+		$this->itemDescription = $itemDescription;
 	}
 
 	/**
@@ -122,17 +125,17 @@ class ExportDocPosition {
 	 *
 	 * @return string|null - Country Code Origin or null on failure
 	 */
-	public function getCountryCodeOrigin() {
-		return $this->countryCodeOrigin;
+	public function getCountryOfOrigin() {
+		return $this->countryOfOrigin;
 	}
 
 	/**
 	 * Set the Country Code Origin
 	 *
-	 * @param string $countryCodeOrigin - Country Code Origin
+	 * @param string $countryOfOrigin - Country Code Origin
 	 */
-	private function setCountryCodeOrigin($countryCodeOrigin) {
-		$this->countryCodeOrigin = $countryCodeOrigin;
+	public function setCountryOfOrigin($countryOfOrigin) {
+		$this->countryOfOrigin = mb_strtoupper($countryOfOrigin);
 	}
 
 	/**
@@ -140,71 +143,81 @@ class ExportDocPosition {
 	 *
 	 * @return float|int|string|null - Custom Tariff Number or null for none
 	 */
-	public function getCustomsTariffNumber() {
-		return $this->customsTariffNumber;
+	public function getHsCode() {
+		return $this->hsCode;
 	}
 
 	/**
 	 * Set the Custom Tariff Number
 	 *
-	 * @param float|int|string|null $customsTariffNumber - Custom Tariff Number or null for none
+	 * @param float|int|string|null $hsCode - Custom Tariff Number or null for none
 	 */
-	private function setCustomsTariffNumber($customsTariffNumber) {
-		$this->customsTariffNumber = $customsTariffNumber;
+	public function setHsCode($hsCode) {
+		$this->hsCode = $hsCode;
 	}
 
 	/**
-	 * Get the Amount
+	 * Get the PackagedQuantity
 	 *
-	 * @return int|null - Amount or null on failure
+	 * @return int|null - PackagedQuantity or null on failure
 	 */
-	public function getAmount() {
-		return $this->amount;
+	public function getPackagedQuantity() {
+		return $this->packagedQuantity;
 	}
 
 	/**
-	 * Set the Amount
+	 * Set the PackagedQuantity
 	 *
-	 * @param int $amount - Amount
+	 * @param int $packagedQuantity - PackagedQuantity
 	 */
-	private function setAmount($amount) {
-		$this->amount = $amount;
+	public function setPackagedQuantity($packagedQuantity) {
+		$this->packagedQuantity = $packagedQuantity;
 	}
 
 	/**
 	 * Get the Weight in KG
 	 *
-	 * @return float|null - Weight in KG or null on failure
+	 * @return array|null - Weight in KG or null on failure
 	 */
-	public function getNetWeightInKG() {
-		return $this->netWeightInKG;
+	public function getItemWeight() {
+		return array(
+			"value" => $this->itemWeight->value,
+			"uom" => $this->itemWeight->uom
+		);
 	}
 
 	/**
 	 * Set the Weight in KG
 	 *
-	 * @param float $netWeightInKG - Weight in KG
+	 * @param float $itemWeight - Weight in KG
 	 */
-	private function setNetWeightInKG($netWeightInKG) {
-		$this->netWeightInKG = $netWeightInKG;
+	public function setItemWeight($itemWeight, $itemWeightUom) {
+		$this->itemWeight=new stdclass;
+		$this->itemWeight->value = $itemWeight;
+		$this->itemWeight->uom = $itemWeightUom;
 	}
 
 	/**
 	 * Get the Customs Value for the Unit / Package
 	 *
-	 * @return float|null - Custom Value for the Unit / Package or null on failure
+	 * @return array|null - Custom Value for the Unit / Package or null on failure
 	 */
-	public function getCustomsValue() {
-		return $this->customsValue;
+	public function getItemValue() {
+		return array(
+			"value" => $this->itemValue->value,
+			"currency" => $this->itemValue->currency
+		);
 	}
 
 	/**
 	 * Sets the Customs Value for the Unit / Package
 	 *
-	 * @param float $customsValue - Customs Value for the Unit / Package
+	 * @param $itemValue - Customs Value for the Unit / Package
 	 */
-	private function setCustomsValue($customsValue) {
-		$this->customsValue = $customsValue;
+	public function setItemValue($itemValue, $itemValueCurrency) {
+		$this->itemValue=new stdclass;
+		$this->itemValue->value = $itemValue;
+		$this->itemValue->currency = mb_strtoupper($itemValueCurrency);
 	}
 
 	/**
@@ -213,26 +226,17 @@ class ExportDocPosition {
 	 * @return StdClass - DHL-ExportDocPosition-Class
 	 * @since 2.0
 	 */
-	public function getExportDocPositionClass_v2() {
+	public function getExportDocPositionClass_v3() {
 		$class = new StdClass;
 
-		$class->description = $this->getDescription();
-		$class->countryCodeOrigin = $this->getCountryCodeOrigin();
-		$class->customsTariffNumber = $this->getCustomsTariffNumber();
-		$class->amount = $this->getAmount();
-		$class->netWeightInKG = $this->getNetWeightInKG();
-		$class->customsValue = $this->getCustomsValue();
+		$class->itemDescription = $this->getItemDescription();
+		$class->countryOfOrigin = $this->getCountryOfOrigin();
+		$class->hsCode = $this->getHsCode();
+		$class->packagedQuantity = $this->getPackagedQuantity();
+		$class->itemWeight = $this->getItemWeight();
+		$class->itemValue = $this->getItemValue();
 
 		return $class;
 	}
 
-	/**
-	 * Returns a Class for ExportDocPosition
-	 *
-	 * @return StdClass - DHL-ExportDocPosition-Class
-	 * @since 3.0
-	 */
-	public function getExportDocPositionClass_v3() {
-		return $this->getExportDocPositionClass_v2();
-	}
 }

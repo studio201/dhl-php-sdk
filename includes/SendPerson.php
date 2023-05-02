@@ -1,10 +1,11 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
  * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 26.01.2017
  * Time: 18:17
  *
@@ -16,7 +17,7 @@ use stdClass;
 /**
  * Class SendPerson
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  */
 abstract class SendPerson extends Address {
 	/**
@@ -25,9 +26,9 @@ abstract class SendPerson extends Address {
 	 * Min-Len: -
 	 * Max-Len: 50
 	 *
-	 * @var string $name - Name
+	 * @var string $name1 - Name
 	 */
-	private $name;
+	private $name1;
 
 	/**
 	 * Name of SendPerson (Part 2)
@@ -86,26 +87,54 @@ abstract class SendPerson extends Address {
 	 * Min-Len: -
 	 * Max-Len: 50
 	 *
-	 * @var string|null $contactPerson - Contact Person | null for none
+	 * @var string|null $contactName - Contact Person | null for none
 	 */
-	private $contactPerson = null;
+	private $contactName = null;
+
+	/**
+	 * Contact Person of the SendPerson (Mostly used in Companies)
+	 *
+	 * Note: Optional
+	 *
+	 * Min-Len: -
+	 * Max-Len: 50
+	 *
+	 * @var string|null $shipperRef - Contact Person | null for none
+	 */
+	private $shipperRef = null;
+
+	/**
+	 * @return string|null
+	 */
+	public function getShipperRef(): ?string
+	{
+		return $this->shipperRef;
+	}
+
+	/**
+	 * @param string|null $shipperRef
+	 */
+	public function setShipperRef(?string $shipperRef): void
+	{
+		$this->shipperRef = $shipperRef;
+	}
 
 	/**
 	 * Get the Name
 	 *
 	 * @return string - Name
 	 */
-	public function getName() {
-		return $this->name;
+	public function getName1() {
+		return $this->name1;
 	}
 
 	/**
 	 * Set the Name
 	 *
-	 * @param string $name - Name
+	 * @param string $name1 - Name
 	 */
-	public function setName($name) {
-		$this->name = $name;
+	public function setName1($name1) {
+		$this->name1 = $name1;
 	}
 
 	/**
@@ -185,59 +214,18 @@ abstract class SendPerson extends Address {
 	 *
 	 * @return null|string - Contact-Person or null if none
 	 */
-	public function getContactPerson() {
-		return $this->contactPerson;
+	public function getContactName() {
+		return $this->contactName;
 	}
 
 	/**
 	 * Set the Contact-Person
 	 *
-	 * @param null|string $contactPerson - Contact-Person or null for none
+	 * @param null|string $contactName - Contact-Person or null for none
 	 */
-	public function setContactPerson($contactPerson) {
-		$this->contactPerson = $contactPerson;
+	public function setContactName($contactName) {
+		$this->contactName = $contactName;
 	}
-
-	/**
-	 * Returns the Communication Class
-	 *
-	 * @return StdClass - Communication Class
-	 * @since 2.0
-	 */
-	protected function getCommunicationClass_v2() {
-		$class = new StdClass;
-
-		if($this->getPhone() !== null)
-			$class->phone = $this->getPhone();
-		if($this->getEmail() !== null)
-			$class->email = $this->getEmail();
-		if($this->getContactPerson() !== null)
-			$class->contactPerson = $this->getContactPerson();
-
-		// Just set a Contact-Person (The name) if nothing else if given since this is a required element but every element is optional...
-		if($this->getPhone() === null && $this->getEmail() === null && $this->getContactPerson() === null)
-			$class->contactPerson = $this->getName();
-
-		return $class;
-	}
-
-	/**
-	 * Returns the Communication Class
-	 *
-	 * @return StdClass - Communication Class
-	 * @since 3.0
-	 */
-	protected function getCommunicationClass_v3() {
-		return $this->getCommunicationClass_v2();
-	}
-
-	/**
-	 * Returns a Class for the DHL-SendPerson
-	 *
-	 * @return StdClass - DHL-SendPerson-class
-	 * @since 2.0
-	 */
-	abstract public function getClass_v2();
 
 	/**
 	 * Returns a Class for the DHL-SendPerson
