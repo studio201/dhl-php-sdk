@@ -4,11 +4,9 @@ namespace Petschko\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
- * Authors-Website: http://petschko.org/
+ * Authors-Website: https://petschko.org/
  * Date: 26.01.2017
  * Time: 18:18
- * Update: 05.08.2018
- * Version: 0.1.2
  *
  * Notes: Contains the Service Class
  */
@@ -330,17 +328,6 @@ class Service {
 	private $preferredDayText = null;
 
 	/**
-	 * Contains if GoGreen is enabled
-	 *
-	 * Note: Optional|Version 1 ONLY
-	 *
-	 * @var bool|null $goGreen - Is this enabled | null uses default
-	 *
-	 * @deprecated - DHL-API-Version 1 Field
-	 */
-	private $goGreen = null;
-
-	/**
 	 * Contains if deliver Perishables
 	 *
 	 * Note: Optional
@@ -348,17 +335,6 @@ class Service {
 	 * @var bool|null $perishables - Is this enabled | null uses default
 	 */
 	private $perishables = null;
-
-	/**
-	 * Contains if personal handover is enabled
-	 *
-	 * Note: Optional
-	 *
-	 * @var bool|null $personalHandover - Is this enabled | null uses default
-	 *
-	 * @deprecated - DHL-API-Version 1 Field
-	 */
-	private $personalHandover = null;
 
 	/**
 	 * Contains if Neighbour delivery is disabled
@@ -478,48 +454,27 @@ class Service {
 	private $identCheckObj = null;
 
 	/**
-	 * Clears Memory
+	 * Contains if ParcelOutletRouting is enabled
+	 *
+	 * Note: Optional
+	 *
+	 * @var bool|null $parcelOutletRoutingEnabled - Is ParcelOutletRouting enabled | null uses default
+	 * @since 3.0
 	 */
-	public function __destruct() {
-		unset($this->dayOfDeliveryEnabled);
-		unset($this->dayOfDeliveryDate);
-		unset($this->deliveryTimeframeEnabled);
-		unset($this->deliveryTimeframe);
-		unset($this->preferredTimeEnabled);
-		unset($this->preferredTime);
-		unset($this->individualSenderRequirementsEnabled);
-		unset($this->individualSenderRequirementsText);
-		unset($this->packagingReturn);
-		unset($this->returnImmediatelyIfShipmentFailed);
-		unset($this->noticeOnNonDeliverable);
-		unset($this->shipmentHandlingEnabled);
-		unset($this->shipmentHandlingType);
-		unset($this->endorsementEnabled);
-		unset($this->endorsementType);
-		unset($this->visualCheckOfAgeEnabled);
-		unset($this->visualCheckOfAgeType);
-		unset($this->preferredLocationEnabled);
-		unset($this->preferredLocationDetails);
-		unset($this->preferredNeighbourEnabled);
-		unset($this->preferredNeighbourText);
-		unset($this->preferredDayEnabled);
-		unset($this->preferredDayText);
-		unset($this->goGreen);
-		unset($this->perishables);
-		unset($this->personalHandover);
-		unset($this->disableNeighbourDelivery);
-		unset($this->namedPersonOnly);
-		unset($this->returnReceipt);
-		unset($this->premium);
-		unset($this->cashOnDeliveryEnabled);
-		unset($this->cashOnDeliveryAddFee);
-		unset($this->cashOnDeliveryAmount);
-		unset($this->additionalInsuranceEnabled);
-		unset($this->additionalInsuranceAmount);
-		unset($this->bulkyGoods);
-		unset($this->identCheckEnabled);
-		unset($this->identCheckObj);
-	}
+	private $parcelOutletRoutingEnabled = null;
+
+	/**
+	 * Contains the details for ParcelOutletRouting
+	 *
+	 * Note: Optional
+	 *
+	 * Min-Len: 1
+	 * Max-Len: 100
+	 *
+	 * @var string|null $parcelOutletRoutingDetails - Details of the ParcelOutletRouting | null for none
+	 * @since 3.0
+	 */
+	private $parcelOutletRoutingDetails = null;
 
 	/**
 	 * Get if the Service "DayOfDelivery" is enabled
@@ -665,10 +620,7 @@ class Service {
 	 * @deprecated - Invalid name of the function
 	 */
 	public function getIndividualSenderRequiredmentsEnabled() {
-		trigger_error(
-			'Called deprecated method ' . __METHOD__ . ': Use getIndividualSenderRequirementsEnabled() instead, this method will removed in the future!',
-			E_USER_DEPRECATED
-		);
+		Deprecated::methodIsDeprecated(__METHOD__, __CLASS__, 'Use getIndividualSenderRequirementsEnabled() instead, this method will removed in the future!');
 
 		return $this->getIndividualSenderRequirementsEnabled();
 	}
@@ -681,10 +633,7 @@ class Service {
 	 * @deprecated - Invalid name of the function
 	 */
 	public function setIndividualSenderRequiredmentsEnabled($individualSenderRequirementsEnabled) {
-		trigger_error(
-			'Called deprecated method ' . __METHOD__ . ': Use setIndividualSenderRequirementsEnabled() instead, this method will removed in the future!',
-			E_USER_DEPRECATED
-		);
+		Deprecated::methodIsDeprecated(__METHOD__, __CLASS__, 'Use setIndividualSenderRequirementsEnabled() instead, this method will removed in the future!');
 
 		$this->setIndividualSenderRequirementsEnabled($individualSenderRequirementsEnabled);
 	}
@@ -697,10 +646,7 @@ class Service {
 	 * @deprecated - Invalid name of the function
 	 */
 	public function getIndividualSenderRequiredmentsText() {
-		trigger_error(
-			'Called deprecated method ' . __METHOD__ . ': Use getIndividualSenderRequirementsText() instead, this method will removed in the future!',
-			E_USER_DEPRECATED
-		);
+		Deprecated::methodIsDeprecated(__METHOD__, __CLASS__, 'Use getIndividualSenderRequirementsText() instead, this method will removed in the future!');
 
 		return $this->getIndividualSenderRequirementsText();
 	}
@@ -713,10 +659,7 @@ class Service {
 	 * @deprecated - Invalid name of the function
 	 */
 	public function setIndividualSenderRequiredmentsText($individualSenderRequirementsText) {
-		trigger_error(
-			'Called deprecated method ' . __METHOD__ . ': Use setIndividualSenderRequirementsText() instead, this method will removed in the future!',
-			E_USER_DEPRECATED
-		);
+		Deprecated::methodIsDeprecated(__METHOD__, __CLASS__, 'Use setIndividualSenderRequirementsText() instead, this method will removed in the future!');
 
 		$this->setIndividualSenderRequirementsText($individualSenderRequirementsText);
 	}
@@ -779,15 +722,12 @@ class Service {
 	 * Alias for $this->getReturnImmediatelyIfShipmentFailed()
 	 *
 	 * @return bool|null - Should Package return immediately when the shipping has failed or null for default
-	 * 
+	 *
 	 * @deprecated - Invalid name of the function
 	 */
 	public function getReturnImmediatlyIfShipmentFailed() {
-		trigger_error(
-			'Called deprecated method ' . __METHOD__ . ': Use getReturnImmediatelyIfShipmentFailed() instead, this method will removed in the future!',
-			E_USER_DEPRECATED
-		);
-		
+		Deprecated::methodIsDeprecated(__METHOD__, __CLASS__, 'Use getReturnImmediatelyIfShipmentFailed() instead, this method will removed in the future!');
+
 		return $this->getReturnImmediatelyIfShipmentFailed();
 	}
 
@@ -795,21 +735,18 @@ class Service {
 	 * Alias for $this->setReturnImmediatelyIfShipmentFailed()
 	 *
 	 * @param bool|null $returnImmediatelyIfShipmentFailed - Should Package return immediately when the shipping has failed or null for default
-	 * 
+	 *
 	 * @deprecated - Invalid name of the function
 	 */
 	public function setReturnImmediatlyIfShipmentFailed($returnImmediatelyIfShipmentFailed) {
-		trigger_error(
-			'Called deprecated method ' . __METHOD__ . ': Use setReturnImmediatelyIfShipmentFailed() instead, this method will removed in the future!',
-			E_USER_DEPRECATED
-		);
-		
+		Deprecated::methodIsDeprecated(__METHOD__, __CLASS__, 'Use setReturnImmediatelyIfShipmentFailed() instead, this method will removed in the future!');
+
 		$this->setReturnImmediatelyIfShipmentFailed($returnImmediatelyIfShipmentFailed);
 	}
-	
+
 	/**
 	 * Get if the Package should return immediately when the shipping has failed
-	 * 
+	 *
 	 * @return bool|null - Should Package return immediately when the shipping has failed or null for default
 	 */
 	public function getReturnImmediatelyIfShipmentFailed() {
@@ -818,7 +755,7 @@ class Service {
 
 	/**
 	 * Set if the Package should return immediately when the shipping has failed
-	 * 
+	 *
 	 * @param bool|null $returnImmediatelyIfShipmentFailed - Should Package return immediately when the shipping has failed or null for default
 	 */
 	public function setReturnImmediatelyIfShipmentFailed($returnImmediatelyIfShipmentFailed) {
@@ -833,10 +770,7 @@ class Service {
 	 * @deprecated - Invalid name of the function
 	 */
 	public function getNoticeNonDeliverability() {
-		trigger_error(
-			'Called deprecated method ' . __METHOD__ . ': Use getNoticeOnNonDeliverable() instead, this method will removed in the future!',
-			E_USER_DEPRECATED
-		);
+		Deprecated::methodIsDeprecated(__METHOD__, __CLASS__, 'Use getNoticeOnNonDeliverable() instead, this method will removed in the future!');
 
 		return $this->getNoticeOnNonDeliverable();
 	}
@@ -849,10 +783,7 @@ class Service {
 	 * @deprecated - Invalid name of the function
 	 */
 	public function setNoticeNonDeliverability($noticeOnNonDeliverable) {
-		trigger_error(
-			'Called deprecated method ' . __METHOD__ . ': Use setNoticeOnNonDeliverable() instead, this method will removed in the future!',
-			E_USER_DEPRECATED
-		);
+		Deprecated::methodIsDeprecated(__METHOD__, __CLASS__, 'Use setNoticeOnNonDeliverable() instead, this method will removed in the future!');
 
 		$this->setNoticeOnNonDeliverable($noticeOnNonDeliverable);
 	}
@@ -1134,32 +1065,6 @@ class Service {
 	}
 
 	/**
-	 * Get if the Service "GoGreen" is enabled
-	 *
-	 * @return bool|null - Is the Service "GoGreen" enabled or null for default
-	 *
-	 * @deprecated - DHL-API-Version 1 Method
-	 */
-	public function getGoGreen() {
-		trigger_error('[DHL-PHP-SDK]: Version 1 Methods are deprecated and will removed soon (Called method ' . __METHOD__ . ')!', E_USER_DEPRECATED);
-
-		return $this->goGreen;
-	}
-
-	/**
-	 * Set if the Service "GoGreen" is enabled
-	 *
-	 * @param bool|null $goGreen - Is the Service "GoGreen" enabled or null for default
-	 *
-	 * @deprecated - DHL-API-Version 1 Method
-	 */
-	public function setGoGreen($goGreen) {
-		trigger_error('[DHL-PHP-SDK]: Version 1 Methods are deprecated and will removed soon (Called method ' . __METHOD__ . ')!', E_USER_DEPRECATED);
-
-		$this->goGreen = $goGreen;
-	}
-
-	/**
 	 * Get if deliver Perishables
 	 *
 	 * @return bool|null - Deliver Perishables or null for default
@@ -1175,40 +1080,6 @@ class Service {
 	 */
 	public function setPerishables($perishables) {
 		$this->perishables = $perishables;
-	}
-
-	/**
-	 * Get if the Service "PersonalHandover" is enabled
-	 *
-	 * @return bool|null - Is the Service "PersonalHandover" enabled or null for default
-	 *
-	 * @deprecated - DHL-API-Version 1 Method
-	 */
-	public function getPersonalHandover() {
-		trigger_error(
-			'[DHL-PHP-SDK]: Version 1 Methods are deprecated and will removed soon ( Called method ' . __METHOD__ .
-			' - Version 2 Function: getNamedPersonOnly() )!',
-			E_USER_DEPRECATED
-		);
-
-		return $this->personalHandover;
-	}
-
-	/**
-	 * Set if the Service "PersonalHandover" is enabled
-	 *
-	 * @param bool|null $personalHandover - Is the Service "PersonalHandover" enabled or null for default
-	 *
-	 * @deprecated - DHL-API-Version 1 Method
-	 */
-	public function setPersonalHandover($personalHandover) {
-		trigger_error(
-			'[DHL-PHP-SDK]: Version 1 Methods are deprecated and will removed soon ( Called method ' . __METHOD__ .
-			' - Version2 Function: setNamedPersonOnly($name) )!',
-			E_USER_DEPRECATED
-		);
-
-		$this->personalHandover = $personalHandover;
 	}
 
 	/**
@@ -1428,18 +1299,43 @@ class Service {
 	}
 
 	/**
-	 * Get the Class of this Service-Object
+	 * Get if the ParcelOutletRouting is enabled
 	 *
-	 * @param string $productType - Type of the Product
-	 * @return StdClass - Service-DHL-Class
-	 *
-	 * @deprecated - DHL-API-Version 1 Method
+	 * @return bool|null - Is ParcelOutletRouting enabled or null for default
+	 * @since 3.0
 	 */
-	public function getServiceClass_v1($productType) {
-		trigger_error('[DHL-PHP-SDK]: Version 1 Methods are deprecated and will removed soon (Called method ' . __METHOD__ . ')!', E_USER_DEPRECATED);
-		trigger_error('[DHL-PHP-SDK]: Called Version 1 Method: ' . __METHOD__ . ' is incomplete (does nothing)!', E_USER_WARNING);
+	public function getParcelOutletRoutingEnabled(): ?bool {
+		return $this->parcelOutletRoutingEnabled;
+	}
 
-		return new StdClass;
+	/**
+	 * Set if ParcelOutletRouting is enabled
+	 *
+	 * @param bool|null $parcelOutletRoutingEnabled - Is ParcelOutletRouting enabled or null for default
+	 * @since 3.0
+	 */
+	public function setParcelOutletRoutingEnabled(?bool $parcelOutletRoutingEnabled): void {
+		$this->parcelOutletRoutingEnabled = $parcelOutletRoutingEnabled;
+	}
+
+	/**
+	 * Get the ParcelOutletRouting details
+	 *
+	 * @return string|null - ParcelOutletRouting details or null for none
+	 * @since 3.0
+	 */
+	public function getParcelOutletRoutingDetails(): ?string {
+		return $this->parcelOutletRoutingDetails;
+	}
+
+	/**
+	 * Set the ParcelOutletRouting details
+	 *
+	 * @param string|null $parcelOutletRoutingDetails - ParcelOutletRouting details or null for none
+	 * @since 3.0
+	 */
+	public function setParcelOutletRoutingDetails(?string $parcelOutletRoutingDetails): void {
+		$this->parcelOutletRoutingDetails = $parcelOutletRoutingDetails;
 	}
 
 	/**
@@ -1447,6 +1343,7 @@ class Service {
 	 *
 	 * @param string $productType - Type of the Product
 	 * @return StdClass - Service-DHL-Class
+	 * @since 2.0
 	 */
 	public function getServiceClass_v2($productType) {
 		$class = new StdClass;
@@ -1566,13 +1463,13 @@ class Service {
 			$class->CashOnDelivery = new StdClass;
 			$class->CashOnDelivery->active = (int) $this->getCashOnDeliveryEnabled();
 			if($this->getCashOnDeliveryAddFee() !== null)
-				$class->CashOnDelivery->addFee = $this->getCashOnDeliveryAddFee();
-			$class->CashOnDelivery->codAmount = $this->getCashOnDeliveryAmount();
+				$class->CashOnDelivery->addFee = (int) $this->getCashOnDeliveryAddFee();
+			$class->CashOnDelivery->codAmount = (float) $this->getCashOnDeliveryAmount();
 		}
 		if($this->getAdditionalInsuranceEnabled() !== null) {
 			$class->AdditionalInsurance = new StdClass;
 			$class->AdditionalInsurance->active = (int) $this->getAdditionalInsuranceEnabled();
-			$class->AdditionalInsurance->insuranceAmount = $this->getAdditionalInsuranceAmount();
+			$class->AdditionalInsurance->insuranceAmount = (float) $this->getAdditionalInsuranceAmount();
 		}
 		if($this->getBulkyGoods() !== null) {
 			$class->BulkyGoods = new StdClass;
@@ -1582,6 +1479,27 @@ class Service {
 			$class->IdentCheck = new StdClass;
 			$class->IdentCheck->active = (int) $this->getIdentCheckEnabled();
 			$class->IdentCheck->Ident = $this->getIdentCheckObj()->getIdentClass_v2();
+		}
+
+		return $class;
+	}
+
+	/**
+	 * Get the Class of this Service-Object
+	 *
+	 * @param string $productType - Type of the Product
+	 * @return StdClass - Service-DHL-Class
+	 * @since 3.0
+	 */
+	public function getServiceClass_v3(string $productType) {
+		$class = $this->getServiceClass_v2($productType);
+
+		if($this->getParcelOutletRoutingEnabled() !== null) {
+			$class->ParcelOutletRouting = new StdClass;
+			$class->ParcelOutletRouting->active = (int) $this->getParcelOutletRoutingEnabled();
+
+			if($this->getParcelOutletRoutingDetails() !== null)
+				$class->ParcelOutletRouting->details = $this->getParcelOutletRoutingDetails();
 		}
 
 		return $class;

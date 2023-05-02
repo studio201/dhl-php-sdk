@@ -1,14 +1,13 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
- * Authors-Website: http://petschko.org/
+ * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 02.09.2018
  * Time: 14:55
- * Update: -
- * Version: 0.0.1
  *
  * Notes: Interface for Response and LabelData
  */
@@ -16,7 +15,7 @@ namespace Petschko\DHL;
 /**
  * Interface LabelResponse
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  */
 interface LabelResponse {
 	/**
@@ -54,7 +53,7 @@ interface LabelResponse {
 	 *
 	 * @return string|null - Sequence-Number of the Request or null if not set
 	 */
-	function getSequenceNumber();
+	function getShipmentRefNo();
 
 	/**
 	 * Getter for Shipment-Number

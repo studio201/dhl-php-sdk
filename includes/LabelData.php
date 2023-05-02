@@ -1,14 +1,13 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
- * Authors-Website: http://petschko.org/
+ * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 02.09.2018
  * Time: 13:13
- * Update: 05.09.2018
- * Version: 1.0.0
  *
  * Notes: Contains the LabelData Class
  */
@@ -16,7 +15,7 @@ namespace Petschko\DHL;
 /**
  * Class LabelData
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  */
 class LabelData extends Version implements LabelResponse {
 	/**
@@ -48,13 +47,6 @@ class LabelData extends Version implements LabelResponse {
 	 * @var string|null $statusMessage - Status-Message | null if not set
 	 */
 	private $statusMessage = null;
-
-	/**
-	 * Sequence-Number (Useful for AJAX-Requests)
-	 *
-	 * @var string|null $sequenceNumber - Sequence-Number of the Request | null for none
-	 */
-	private $sequenceNumber = null;
 
 	/**
 	 * Shipment-Number
@@ -91,6 +83,12 @@ class LabelData extends Version implements LabelResponse {
 	 */
 	private $codLabel = null;
 
+	private $labelFormat = null;
+	private $returnLabelFormat = null;
+	private $customsDocFormat = null;
+	private $codLabelFormat = null;
+
+	private $shipmentRefNo = null;
 	/**
 	 * LabelData constructor.
 	 *
@@ -103,28 +101,12 @@ class LabelData extends Version implements LabelResponse {
 		if($labelData !== null) {
 			switch($this->getMayor()) {
 				case 1:
-					trigger_error('[DHL-PHP-SDK]: Called Version 1 Method ' .__CLASS__ . '->' . __METHOD__ . ' is incomplete (does nothing)!', E_USER_WARNING);
 					break;
 				case 2:
 				default:
-					$this->loadLabelData_v2($labelData);
+					$this->loadLabelData_v3($labelData);
 			}
 		}
-	}
-
-	/**
-	 * Clears Memory
-	 */
-	public function __destruct() {
-		unset($this->statusCode);
-		unset($this->statusText);
-		unset($this->statusMessage);
-		unset($this->sequenceNumber);
-		unset($this->shipmentNumber);
-		unset($this->label);
-		unset($this->returnLabel);
-		unset($this->exportDoc);
-		unset($this->codLabel);
 	}
 
 	/**
@@ -159,7 +141,7 @@ class LabelData extends Version implements LabelResponse {
 	 *
 	 * @param int $statusCode - Status-Code
 	 */
-	private function setStatusCode($statusCode) {
+	public function setStatusCode($statusCode) {
 		$this->statusCode = $statusCode;
 	}
 
@@ -177,7 +159,7 @@ class LabelData extends Version implements LabelResponse {
 	 *
 	 * @param string|null $statusText - Status-Text or null for not set
 	 */
-	private function setStatusText($statusText) {
+	public function setStatusText($statusText) {
 		$this->statusText = $statusText;
 	}
 
@@ -195,7 +177,7 @@ class LabelData extends Version implements LabelResponse {
 	 *
 	 * @param string|null $statusMessage - Status-Message or null for not set
 	 */
-	private function setStatusMessage($statusMessage) {
+	public function setStatusMessage($statusMessage) {
 		$this->statusMessage = $statusMessage;
 	}
 
@@ -204,17 +186,17 @@ class LabelData extends Version implements LabelResponse {
 	 *
 	 * @return string|null - Sequence-Number of the Request or null if not set
 	 */
-	public function getSequenceNumber() {
-		return $this->sequenceNumber;
+	public function getShipmentRefNo() {
+		return $this->shipmentRefNo;
 	}
 
 	/**
 	 * Setter for Sequence-Number
 	 *
-	 * @param string|null $sequenceNumber - Sequence-Number of the Request or null for not set
+	 * @param string|null $ShipmentRefNo - Sequence-Number of the Request or null for not set
 	 */
-	private function setSequenceNumber($sequenceNumber) {
-		$this->sequenceNumber = $sequenceNumber;
+	public function setShipmentRefNo($shipmentRefNo) {
+		$this->shipmentRefNo = $shipmentRefNo;
 	}
 
 	/**
@@ -231,7 +213,7 @@ class LabelData extends Version implements LabelResponse {
 	 *
 	 * @param null|string $shipment_number - Shipment-Number or null for not set
 	 */
-	private function setShipmentNumber($shipment_number) {
+	public function setShipmentNumber($shipment_number) {
 		$this->shipmentNumber = $shipment_number;
 	}
 
@@ -249,7 +231,7 @@ class LabelData extends Version implements LabelResponse {
 	 *
 	 * @param null|string $label - Label URL/Base64-Data (Can also contain the return label) or null for not set
 	 */
-	private function setLabel($label) {
+	public function setLabel($label) {
 		$this->label = $label;
 	}
 
@@ -267,7 +249,7 @@ class LabelData extends Version implements LabelResponse {
 	 *
 	 * @param null|string $returnLabel - Return Label-URL/Base64-Label-Data or null for not requested/set
 	 */
-	private function setReturnLabel($returnLabel) {
+	public function setReturnLabel($returnLabel) {
 		$this->returnLabel = $returnLabel;
 	}
 
@@ -285,7 +267,7 @@ class LabelData extends Version implements LabelResponse {
 	 *
 	 * @param null|string $exportDoc - Export-Document Label-URL/Base64-Label-Data or null for not requested/set
 	 */
-	private function setExportDoc($exportDoc) {
+	public function setExportDoc($exportDoc) {
 		$this->exportDoc = $exportDoc;
 	}
 
@@ -303,86 +285,180 @@ class LabelData extends Version implements LabelResponse {
 	 *
 	 * @param null|string $codLabel - Cod-Label-URL/Base64-Data or null if not requested/set
 	 */
-	private function setCodLabel($codLabel) {
+	public function setCodLabel($codLabel) {
 		$this->codLabel = $codLabel;
 	}
 
 	/**
 	 * Check if the current Status-Code is correct and set the correct one if not
 	 */
-	private function validateStatusCode() {
-		if($this->getStatusCode() === 0 && $this->getStatusText() !== 'ok')
+	public function validateStatusCode() {
+		if($this->getStatusCode() === 0 && $this->getStatusText() !== 'OK')
 			$this->setStatusCode(Response::DHL_ERROR_WEAK_WARNING);
+	}
+
+	/**
+	 * @return null
+	 */
+	public function getLabelFormat()
+	{
+		return $this->labelFormat;
+	}
+
+	/**
+	 * @param null $labelFormat
+	 */
+	public function setLabelFormat($labelFormat): void
+	{
+		$this->labelFormat = $labelFormat;
+	}
+
+	/**
+	 * @return null
+	 */
+	public function getReturnLabelFormat()
+	{
+		return $this->returnLabelFormat;
+	}
+
+	/**
+	 * @param null $returnLabelFormat
+	 */
+	public function setReturnLabelFormat($returnLabelFormat): void
+	{
+		$this->returnLabelFormat = $returnLabelFormat;
+	}
+
+	/**
+	 * @return null
+	 */
+	public function getCustomsDocFormat()
+	{
+		return $this->customsDocFormat;
+	}
+
+	/**
+	 * @param null $customsDocFormat
+	 */
+	public function setCustomsDocFormat($customsDocFormat): void
+	{
+		$this->customsDocFormat = $customsDocFormat;
+	}
+
+	/**
+	 * @return null
+	 */
+	public function getCodLabelFormat()
+	{
+		return $this->codLabelFormat;
+	}
+
+	/**
+	 * @param null $codLabelFormat
+	 */
+	public function setCodLabelFormat($codLabelFormat): void
+	{
+		$this->codLabelFormat = $codLabelFormat;
 	}
 
 	/**
 	 * Set all Values of the LabelResponse to this Object
 	 *
 	 * @param Object $response - LabelData-Response
+	 * @since 2.0
 	 */
-	private function loadLabelData_v2($response) {
-		$labelResponse = $response;
-		// Check if the tree is correct (and may reconfigure it)
-		if(isset($response->LabelData))
-			$labelResponse = $response->LabelData;
+	public function loadLabelData_v3($response) {
 
 		// Get Sequence-Number
-		if(isset($response->sequenceNumber))
-			$this->setSequenceNumber((string) $response->sequenceNumber);
-		else if(isset($labelResponse->sequenceNumber))
-			$this->setSequenceNumber((string) $labelResponse->sequenceNumber);
+		if(isset($response->shipmentRefNo))
+			$this->setShipmentRefNo((string) $response->shipmentRefNo);
 
 		// Get Status
-		if(isset($labelResponse->Status)) {
-			if(isset($labelResponse->Status->statusCode))
-				$this->setStatusCode((int) $labelResponse->Status->statusCode);
-			if(isset($labelResponse->Status->statusText)) {
-				if(is_array($labelResponse->Status->statusText))
-					$this->setStatusText(implode(';', $labelResponse->Status->statusText));
+		if(isset($response->sstatus)) {
+			if(isset($response->sstatus->statusCode))
+				$this->setStatusCode((int) $response->sstatus->statusCode);
+			if(isset($response->sstatus->title)) {
+				if(is_array($response->sstatus->title))
+					$this->setStatusText(implode(';', $response->sstatus->title));
 				else
-					$this->setStatusText($labelResponse->Status->statusText);
+					$this->setStatusText($response->sstatus->title);
 			}
-			if(isset($labelResponse->Status->statusMessage)) {
-				if(is_array($labelResponse->Status->statusMessage))
-					$this->setStatusMessage(implode(';', $labelResponse->Status->statusMessage));
+			if(isset($response->sstatus->detail)) {
+				if(is_array($response->sstatus->detail))
+					$this->setStatusText(implode(';', $response->sstatus->detail));
 				else
-					$this->setStatusMessage($labelResponse->Status->statusMessage);
+					$this->setStatusText($response->sstatus->detail);
+			}
+			if(isset($response->validationMessages)) {
+				if(is_array($response->validationMessages))
+					$this->setStatusMessage(implode('; ', array_map(function ($entry) {
+						return $entry->validationMessage;
+					}, $response->validationMessages)));
+				else
+					$this->setStatusMessage($response->validationMessages);
 			}
 
 			$this->validateStatusCode();
+		} else {
+			// Error Labels
+			if(isset($response->propertyPath)) {
+				if(is_array($response->propertyPath))
+					$this->setStatusText(implode(';', $response->propertyPath));
+				else
+					$this->setStatusText($response->propertyPath);
+			}
+			if(isset($response->message)) {
+				if(is_array($response->message))
+					$this->setStatusMessage(implode(';', $response->message));
+				else
+					$this->setStatusMessage($response->message);
+			}
 		}
 
 		// Get Shipment-Number
-		if(isset($response->shipmentNumber))
-			$this->setShipmentNumber((string) $response->shipmentNumber);
-		else if(isset($labelResponse->shipmentNumber))
-			$this->setShipmentNumber((string) $labelResponse->shipmentNumber);
+		if(isset($response->shipmentNo))
+			$this->setShipmentNumber((string) $response->shipmentNo);
 
 		// Get Label-Data
-		if(isset($labelResponse->labelUrl))
-			$this->setLabel($labelResponse->labelUrl);
-		else if(isset($labelResponse->labelData))
-			$this->setLabel($labelResponse->labelData);
+		if(isset($response->label->url))
+			$this->setLabel($response->label->url);
+		else if(isset($response->label->b64))
+			$this->setLabel($response->label->b64);
+		else if(isset($response->label->zpl2))
+			$this->setLabel($response->label->zpl2);
 
 		// Get Return-Label
-		if(isset($labelResponse->returnLabelUrl))
-			$this->setReturnLabel($labelResponse->returnLabelUrl);
-		else if(isset($labelResponse->returnLabelData))
-			$this->setReturnLabel($labelResponse->returnLabelData);
+		if(isset($response->returnLabel->url))
+			$this->setReturnLabel($response->returnLabel->url);
+		else if(isset($response->returnLabel->b64))
+			$this->setReturnLabel($response->returnLabel->b64);
+		else if(isset($response->returnLabel->zpl2))
+			$this->setReturnLabel($response->returnLabel->zpl2);
 
 		// Get Export-Doc
-		if(isset($labelResponse->exportLabelUrl))
-			$this->setExportDoc($labelResponse->exportLabelUrl);
-		else if(isset($labelResponse->exportLabelData))
-			$this->setExportDoc($labelResponse->exportLabelData);
-		else if(isset($labelResponse->exportDocURL))
-			$this->setExportDoc($labelResponse->exportDocURL);
-		else if(isset($labelResponse->exportDocData))
-			$this->setExportDoc($labelResponse->exportDocData);
+		if(isset($response->customsDoc->url))
+			$this->setExportDoc($response->customsDoc->url);
+		else if(isset($response->customsDoc->b64))
+			$this->setExportDoc($response->customsDoc->b64);
+		else if(isset($response->customsDoc->zpl2))
+			$this->setExportDoc($response->customsDoc->zpl2);
 
-		if(isset($labelResponse->codLabelUrl))
-			$this->setCodLabel($labelResponse->codLabelUrl);
-		else if(isset($labelResponse->codLabelData))
-			$this->setCodLabel($labelResponse->codLabelData);
+		// GET Cod Label
+		if(isset($response->codLabel->url))
+			$this->setCodLabel($response->codLabel->url);
+		else if(isset($response->codLabel->b64))
+			$this->setCodLabel($response->codLabel->b64);
+		else if(isset($response->codLabel->zpl2))
+			$this->setCodLabel($response->codLabel->zpl2);
+
+		if(isset($response->label->printFormat))
+			$this->setLabelFormat($response->label->printFormat);
+		if(isset($response->returnLabel->printFormat))
+			$this->setReturnLabelFormat($response->returnLabel->printFormat);
+		if(isset($response->customsDoc->printFormat))
+			$this->setCustomsDocFormat($response->customsDoc->printFormat);
+		if(isset($response->codLabel->printFormat))
+			$this->setCodLabelFormat($response->codLabel->printFormat);
 	}
+
 }

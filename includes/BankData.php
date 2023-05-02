@@ -1,14 +1,13 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
- * Authors-Website: http://petschko.org/
+ * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 26.01.2017
  * Time: 20:14
- * Update: 14.07.2018
- * Version: 0.0.4
  *
  * Notes: Contains BankData Class
  */
@@ -18,18 +17,21 @@ use stdClass;
 /**
  * Class BankData
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  */
 class BankData {
+
 	/**
-	 * Name of the Account-Owner
+	 * Account reference to customer profile
+	 *
+	 * Note: Optional
 	 *
 	 * Min-Len: -
-	 * Max-Len: 80
+	 * Max-Len: 35
 	 *
-	 * @var string $accountOwnerName - Account-Owner Name
+	 * @var string|null $accountHolder - Account reference to customer profile | null for none
 	 */
-	private $accountOwnerName = '';
+	private $accountHolder = null;
 
 	/**
 	 * Name of the Bank
@@ -55,28 +57,31 @@ class BankData {
 	 * Purpose of bank information
 	 *
 	 * Note: Optional
+	 *
 	 * Min-Len: -
 	 * Max-Len: 35
 	 *
-	 * @var string|null $note1 - Purpose of bank information | null for none
+	 * @var string|null $transferNote1 - Purpose of bank information | null for none
 	 */
-	private $note1 = null;
+	private $transferNote1 = null;
 
 	/**
 	 * Purpose of more bank information
 	 *
 	 * Note: Optional
+	 *
 	 * Min-Len: -
 	 * Max-Len: 35
 	 *
-	 * @var string|null $note2 - Purpose of more bank information | null for none
+	 * @var string|null $transferNote2 - Purpose of more bank information | null for none
 	 */
-	private $note2 = null;
+	private $transferNote2 = null;
 
 	/**
 	 * Bank-Information-Code (BankCCL) of bank account.
 	 *
 	 * Note: Optional
+	 *
 	 * Min-Len: -
 	 * Max-Len: 11
 	 *
@@ -88,49 +93,32 @@ class BankData {
 	 * Account reference to customer profile
 	 *
 	 * Note: Optional
+	 *
 	 * Min-Len: -
 	 * Max-Len: 35
 	 *
 	 * @var string|null $accountReference - Account reference to customer profile | null for none
 	 */
 	private $accountReference = null;
-
-	/**
-	 * BankData constructor.
-	 */
-	public function __construct() {
-		// VOID
-	}
-
-	/**
-	 * Clears Memory
-	 */
-	public function __destruct() {
-		unset($this->accountOwnerName);
-		unset($this->bankName);
-		unset($this->iban);
-		unset($this->note1);
-		unset($this->note2);
-		unset($this->bic);
-		unset($this->accountReference);
-	}
+	private $value = null;
+	private $currency = null;
 
 	/**
 	 * Get the Account Owner Name
 	 *
 	 * @return string - Account Owner Name
 	 */
-	public function getAccountOwnerName() {
-		return $this->accountOwnerName;
+	public function getAccountHolder() {
+		return $this->accountHolder;
 	}
 
 	/**
 	 * Set the Account Owner Name
 	 *
-	 * @param string $accountOwnerName - Account Owner Name
+	 * @param string $accountHolder - Account Owner Name
 	 */
-	public function setAccountOwnerName($accountOwnerName) {
-		$this->accountOwnerName = $accountOwnerName;
+	public function setAccountHolder($accountHolder) {
+		$this->accountHolder = $accountHolder;
 	}
 
 	/**
@@ -174,17 +162,17 @@ class BankData {
 	 *
 	 * @return null|string - Bank-Note (1) or null for none
 	 */
-	public function getNote1() {
-		return $this->note1;
+	public function getTransferNote1() {
+		return $this->transferNote1;
 	}
 
 	/**
 	 * Set addition Bank-Note (1)
 	 *
-	 * @param null|string $note1 - Bank-Note (1) or null for none
+	 * @param null|string $transferNote1 - Bank-Note (1) or null for none
 	 */
-	public function setNote1($note1) {
-		$this->note1 = $note1;
+	public function setTransferNote1($transferNote1) {
+		$this->transferNote1 = $transferNote1;
 	}
 
 	/**
@@ -192,17 +180,17 @@ class BankData {
 	 *
 	 * @return null|string - Bank-Note (2) or null for none
 	 */
-	public function getNote2() {
-		return $this->note2;
+	public function getTransferNote2() {
+		return $this->transferNote2;
 	}
 
 	/**
 	 * Set additional Bank-Note (2)
 	 *
-	 * @param null|string $note2 - Bank-Note (2) or null for none
+	 * @param null|string $transferNote2 - Bank-Note (2) or null for none
 	 */
-	public function setNote2($note2) {
-		$this->note2 = $note2;
+	public function setTransferNote2($transferNote2) {
+		$this->transferNote2 = $transferNote2;
 	}
 
 	/**
@@ -241,40 +229,45 @@ class BankData {
 		$this->accountReference = $accountReference;
 	}
 
-	/**
-	 * Returns a DHL-Bank-Class for API v1
-	 *
-	 * @return stdClass - DHL-Bank-Class
-	 *
-	 * @deprecated - DHL-API-Version 1 Method
-	 */
-	public function getBankClass_v1() {
-		trigger_error('[DHL-PHP-SDK]: Version 1 Methods are deprecated and will removed soon (Called method ' . __METHOD__ . ')!', E_USER_DEPRECATED);
-		trigger_error('[DHL-PHP-SDK]: Called Version 1 Method: ' . __METHOD__ . ' is incomplete (does nothing)!', E_USER_WARNING);
+	public function getAmountValue() {
+		return $this->value;
+	}
+	public function setAmountValue($amountValue) {
+		$this->value = $amountValue;
+	}
 
-		return new StdClass;
+	public function getAmountCurrency() {
+		return $this->currency;
+	}
+	public function setAmountCurrency($amountCurrency) {
+		$this->currency = mb_strtoupper($amountCurrency);
 	}
 
 	/**
-	 * Returns a DHL-Bank-Class for API v2
+	 * Returns a DHL-Bank-Class for API v3
 	 *
 	 * @return StdClass - DHL-Bank-Class
+	 * @since 3.0
 	 */
-	public function getBankClass_v2() {
+	public function getBankClass_v3() {
 		$class = new StdClass;
-
-		$class->accountOwner = $this->getAccountOwnerName();
-		$class->bankName = $this->getBankName();
-		$class->iban = $this->getIban();
-		if($this->getNote1() !== null)
-			$class->note1 = $this->getNote1();
-		if($this->getNote2() !== null)
-			$class->note2 = $this->getNote2();
+		$class->bankAccount = new stdclass;
+		$class->bankAccount->accountHolder = $this->getAccountHolder();
+		$class->bankAccount->bankName = $this->getBankName();
+		$class->bankAccount->iban = $this->getIban();
 		if($this->getBic() !== null)
-			$class->bic = $this->getBic();
-		if($this->getAccountReference() !== null)
-			$class->accountreference = $this->getAccountReference();
+			$class->bankAccount->bic = $this->getBic();
+
+		if($this->getTransferNote1() !== null)
+			$class->transferNote1 = $this->getTransferNote1();
+		if($this->getTransferNote2() !== null)
+			$class->transferNote2 = $this->getTransferNote2();
+
+		$class->amount = new stdclass;
+		$class->amount->value = $this->getAmountValue();
+		$class->amount->currency = $this->getAmountCurrency();
 
 		return $class;
 	}
+
 }

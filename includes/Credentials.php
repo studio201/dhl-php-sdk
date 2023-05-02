@@ -1,45 +1,29 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
- * Authors-Website: http://petschko.org/
+ * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 15.09.2016
  * Time: 14:26
- * Update: 14.08.2018
- * Version: 0.1.0
  *
- * Notes: Contains the Credentials class - Checkout the original repo: https://github.com/tobias-redmann/dhl-php-sdk
+ * Notes: Contains the Credentials class
  */
 
 /**
  * Class Credentials
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  */
 class Credentials {
-	// Test-Type Constants
-	/**
-	 * DHL-Test-Mode (Normal)
-	 */
-	const TEST_NORMAL = 'test';
-
-	/**
-	 * DHL-Test-Mode (Thermo-Printer)
-	 */
-	const TEST_THERMO_PRINTER = 'thermo';
 
 	// Test-User Value Constants
 	/**
 	 * DHL Business-API Test-User (Normal)
 	 */
-	const DHL_BUSINESS_TEST_USER = '2222222222_01';
-
-	/**
-	 * DHL Business-API Test-User (Thermo)
-	 */
-	const DHL_BUSINESS_TEST_USER_THERMO = '2222222222_03';
+	const DHL_BUSINESS_TEST_USER = 'sandy_sandbox';
 
 	/**
 	 * DHL Business-API Test-User-Password
@@ -48,15 +32,8 @@ class Credentials {
 
 	/**
 	 * DHL Business-API Test-EKP
-	 *
-	 * @deprecated - Typo in name...
 	 */
-	const DHL_BUSINESS_TEST_EPK = '2222222222'; // Still in here for backward compatibility
-
-	/**
-	 * DHL Business-API Test-EKP
-	 */
-	const DHL_BUSINESS_TEST_EKP = '2222222222';
+	const DHL_BUSINESS_TEST_EKP = '3333333333';
 
 	/**
 	 * Contains the DHL-Intraship Username
@@ -76,9 +53,9 @@ class Credentials {
 	 * LIVE: Your DHL-Account-Password same when you Login to the DHL-Business-Customer-Portal
 	 * (Same as on this Page: https://www.dhl-geschaeftskundenportal.de/ )
 	 *
-	 * @var string $signature - DHL-Intraship Password
+	 * @var string $password - DHL-Intraship Password
 	 */
-	private $signature = '';
+	private $password = '';
 
 	/**
 	 * Contains the DHL-Customer ID
@@ -91,17 +68,11 @@ class Credentials {
 	private $ekp = '';
 
 	/**
-	 * Contains the App ID from the developer Account
-	 *
-	 * TEST: Your-DHL-Developer-Account-Name (Not E-Mail!)
-	 * (You can create yourself an Account for free here: https://entwickler.dhl.de/group/ep )
-	 *
-	 * LIVE: Your Applications-ID
-	 * (You can get this here: https://entwickler.dhl.de/group/ep/home?myaction=viewFreigabe )
-	 *
-	 * @var string $apiUser - App ID from the developer Account
+	 * Contains the ApiKey from the developer Account
+	 **
+	 * @var string $apiKey - App ID from the developer Account
 	 */
-	private $apiUser = '';
+	private $apiKey = '';
 
 	/**
 	 * Contains the App token from the developer Account
@@ -119,39 +90,24 @@ class Credentials {
 	/**
 	 * Credentials constructor.
 	 *
-	 * If Test-Modus is true it will set Test-User, Test-Signature, Test-EKP for you!
+	 * If Test-Modus is true it will set Test-User, Test-Password, Test-EKP for you!
 	 *
-	 * @param bool|string $testMode - Use a specific Test-Mode or Live Mode
+	 * @param bool|string $sandbox - Use a specific Test-Mode or Live Mode
 	 * 					Test-Mode (Normal): Credentials::TEST_NORMAL, 'test', true
 	 * 					Test-Mode (Thermo-Printer): Credentials::TEST_THERMO_PRINTER, 'thermo'
 	 * 					Live (No-Test-Mode): false - default
 	 */
-	public function __construct($testMode = false) {
-		if($testMode) {
-			switch($testMode) {
-				case self::TEST_THERMO_PRINTER:
-					$this->setUser(self::DHL_BUSINESS_TEST_USER_THERMO);
-					break;
-				case self::TEST_NORMAL:
+	public function __construct($sandbox = false) {
+		if($sandbox) {
+			switch($sandbox) {
 				case true:
+					$this->setUser(self::DHL_BUSINESS_TEST_USER);
 				default:
 					$this->setUser(self::DHL_BUSINESS_TEST_USER);
 			}
-
-			$this->setSignature(self::DHL_BUSINESS_TEST_USER_PASSWORD);
+			$this->setPassword(self::DHL_BUSINESS_TEST_USER_PASSWORD);
 			$this->setEkp(self::DHL_BUSINESS_TEST_EKP);
 		}
-	}
-
-	/**
-	 * Clears Memory
-	 */
-	public function __destruct() {
-		unset($this->user);
-		unset($this->signature);
-		unset($this->ekp);
-		unset($this->apiUser);
-		unset($this->apiPassword);
 	}
 
 	/**
@@ -177,17 +133,17 @@ class Credentials {
 	 *
 	 * @return string - DHL-Intraship Password
 	 */
-	public function getSignature() {
-		return $this->signature;
+	public function getPassword() {
+		return $this->password;
 	}
 
 	/**
 	 * Set the DHL-Intraship Password
 	 *
-	 * @param string $signature - DHL-Intraship Password
+	 * @param string $password - DHL-Intraship Password
 	 */
-	public function setSignature($signature) {
-		$this->signature = $signature;
+	public function setPassword($password) {
+		$this->password = $password;
 	}
 
 	/**
@@ -201,20 +157,6 @@ class Credentials {
 	}
 
 	/**
-	 * Alias for $this->getEkp
-	 *
-	 * @param null|int $len - Max-Chars to get from this String or null for all
-	 * @return string - EKP-Number with x Chars
-	 *
-	 * @deprecated - Invalid name of the function
-	 */
-	public function getEpk($len = null) {
-		trigger_error('Called deprecated method ' . __METHOD__ . ': Use getEkp() instead, this method will removed in the future!', E_USER_DEPRECATED);
-
-		return $this->getEkp($len);
-	}
-
-	/**
 	 * Set the EKP-Number
 	 *
 	 * @param string $ekp - EKP-Number
@@ -224,34 +166,21 @@ class Credentials {
 	}
 
 	/**
-	 * Alias for $this->setEkp
-	 *
-	 * @param string $ekp - EKP-Number
-	 *
-	 * @deprecated - Invalid name of the function
-	 */
-	public function setEpk($ekp) {
-		trigger_error('Called deprecated method ' . __METHOD__ . ': Use setEkp() instead, this method will removed in the future!', E_USER_DEPRECATED);
-
-		$this->setEkp($ekp);
-	}
-
-	/**
 	 * Get the API-User
 	 *
 	 * @return string - API-User
 	 */
-	public function getApiUser() {
-		return $this->apiUser;
+	public function getApiKey() {
+		return $this->apiKey;
 	}
 
 	/**
 	 * Set the API-User
 	 *
-	 * @param string $apiUser - API-User
+	 * @param string $apiKey - API-User
 	 */
-	public function setApiUser($apiUser) {
-		$this->apiUser = $apiUser;
+	public function setApiKey($apiKey) {
+		$this->apiKey = $apiKey;
 	}
 
 	/**
@@ -263,14 +192,6 @@ class Credentials {
 		return $this->apiPassword;
 	}
 
-	/**
-	 * Alias for $this->getApiPassword
-	 *
-	 * @return string - API-Password/Key
-	 */
-	public function getApiKey() {
-		return $this->getApiPassword();
-	}
 
 	/**
 	 * Set the API-Password/Key
@@ -281,12 +202,4 @@ class Credentials {
 		$this->apiPassword = $apiPassword;
 	}
 
-	/**
-	 * Alias for $this->setApiPassword
-	 *
-	 * @param string $apiKey - API-Password/Key
-	 */
-	public function setApiKey($apiKey) {
-		$this->setApiPassword($apiKey);
-	}
 }

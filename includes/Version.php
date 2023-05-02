@@ -1,10 +1,11 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
- * Authors-Website: http://petschko.org/
+ * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 26.01.2017
  * Time: 15:04
  *
@@ -16,7 +17,7 @@ use stdClass;
 /**
  * Class Version
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  */
 abstract class Version {
 	/**
@@ -47,15 +48,6 @@ abstract class Version {
 	 */
 	protected function __construct($version) {
 		$this->setVersion($version);
-	}
-
-	/**
-	 * Clears Memory
-	 */
-	protected function __destruct() {
-		unset($this->version);
-		unset($this->mayor);
-		unset($this->minor);
 	}
 
 	/**
@@ -96,7 +88,7 @@ abstract class Version {
 	 *
 	 * @param int $mayor - Mayor-Version-Number
 	 */
-	private function setMayor($mayor) {
+	public function setMayor($mayor) {
 		$this->mayor = $mayor;
 	}
 
@@ -114,7 +106,7 @@ abstract class Version {
 	 *
 	 * @param int $minor - Minor-Version-Number
 	 */
-	private function setMinor($minor) {
+	public function setMinor($minor) {
 		$this->minor = $minor;
 	}
 
@@ -123,7 +115,7 @@ abstract class Version {
 	 *
 	 * @return StdClass - Version DHL-Class
 	 */
-	protected function getVersionClass() {
+	public function getVersionClass() {
 		$class = new StdClass;
 
 		$class->majorRelease = $this->getMayor();

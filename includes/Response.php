@@ -1,14 +1,13 @@
 <?php
 
-namespace Petschko\DHL;
+namespace Jahn\DHL;
 
 /**
  * Author: Peter Dragicevic [peter@petschko.org]
- * Authors-Website: http://petschko.org/
+ * Authors-Website: https://petschko.org/
+ * Modified for new API developer.dhl.com from Jahn on 01.05.2023
  * Date: 18.11.2016
  * Time: 16:00
- * Update: 15.04.2019
- * Version: 1.3.5
  *
  * Notes: Contains the DHL-Response Class, which manages the response that you get with simple getters
  */
@@ -16,7 +15,7 @@ namespace Petschko\DHL;
 /**
  * Class Response
  *
- * @package Petschko\DHL
+ * @package Jahn\DHL
  */
 class Response extends Version implements LabelResponse {
 	/**
@@ -32,7 +31,7 @@ class Response extends Version implements LabelResponse {
 	 * - Response::DHL_ERROR_UNKNOWN_SHIPMENT_NUMBER -> Given Shipment-Number is unknown
 	 */
 	const DHL_ERROR_NOT_SET = -1;
-	const DHL_ERROR_NO_ERROR = 0;
+	const DHL_ERROR_NO_ERROR = 200;
 	const DHL_ERROR_WEAK_WARNING = 1;
 	const DHL_ERROR_SERVICE_TMP_NOT_AVAILABLE = 500;
 	const DHL_ERROR_GENERAL = 1000;
@@ -78,6 +77,14 @@ class Response extends Version implements LabelResponse {
 	private $statusMessage = null;
 
 	/**
+	 * Contains the Status-Message (Mostly more detailed, but longer)
+	 *
+	 * @var string|null $blockType - Status-Message | null if not set
+	 */
+	private $blockType = null;
+
+
+	/**
 	 * Contains all LabelData Objects
 	 *
 	 * @var LabelData[] - LabelData Object-Array
@@ -98,25 +105,12 @@ class Response extends Version implements LabelResponse {
 		if($response !== null) {
 			switch($this->getMayor()) {
 				case 1:
-					trigger_error('[DHL-PHP-SDK]: Called Version 1 Method ' .__CLASS__ . '->' . __METHOD__ . ' is incomplete (does nothing)!', E_USER_WARNING);
 					break;
 				case 2:
 				default:
-					$this->loadResponse_v2($response);
+					$this->loadResponse_v3($response);
 			}
 		}
-	}
-
-	/**
-	 * Clears Memory
-	 */
-	public function __destruct() {
-		parent::__destruct();
-		unset($this->manifestData);
-		unset($this->statusCode);
-		unset($this->statusText);
-		unset($this->statusMessage);
-		unset($this->labelData);
 	}
 
 	/**
@@ -127,19 +121,6 @@ class Response extends Version implements LabelResponse {
 	public function getShipmentNumber() {
 		if($this->countLabelData() > 0)
 			return $this->getLabelData(0)->getShipmentNumber();
-
-		return null;
-	}
-
-	/**
-	 * Getter for pieceNumber
-	 *
-	 * @return null|string - null if not set else pieceNumber (just used in API-Version 1)
-	 *
-	 * @deprecated - DHL-API-Version 1 Method
-	 */
-	public function getPieceNumber() {
-		trigger_error('[DHL-PHP-SDK]: Version 1 Methods are deprecated and will removed soon (Called method ' . __METHOD__ . ')!', E_USER_DEPRECATED);
 
 		return null;
 	}
@@ -194,7 +175,7 @@ class Response extends Version implements LabelResponse {
 	 *
 	 * @param null|string $manifestData - PDF-Data as Base64-String or null for none
 	 */
-	private function setManifestData($manifestData) {
+	public function setManifestData($manifestData) {
 		$this->manifestData = $manifestData;
 	}
 
@@ -203,9 +184,9 @@ class Response extends Version implements LabelResponse {
 	 *
 	 * @return string|null - Sequence-Number of the Request or null if not set
 	 */
-	public function getSequenceNumber() {
+	public function getShipmentRefNo() {
 		if($this->countLabelData() > 0)
-			return $this->getLabelData(0)->getSequenceNumber();
+			return $this->getLabelData(0)->getShipmentRefNo;
 
 		return null;
 	}
@@ -242,7 +223,7 @@ class Response extends Version implements LabelResponse {
 	 *
 	 * @param int $statusCode - Status-Code
 	 */
-	private function setStatusCode($statusCode) {
+	public function setStatusCode($statusCode) {
 		$this->statusCode = $statusCode;
 	}
 
@@ -260,7 +241,7 @@ class Response extends Version implements LabelResponse {
 	 *
 	 * @param string|null $statusText - Status-Text or null for not set
 	 */
-	private function setStatusText($statusText) {
+	public function setStatusText($statusText) {
 		$this->statusText = $statusText;
 	}
 
@@ -278,7 +259,7 @@ class Response extends Version implements LabelResponse {
 	 *
 	 * @param string|null $statusMessage - Status-Message or null for not set
 	 */
-	private function setStatusMessage($statusMessage) {
+	public function setStatusMessage($statusMessage) {
 		$this->statusMessage = $statusMessage;
 	}
 
@@ -300,7 +281,7 @@ class Response extends Version implements LabelResponse {
 	 *
 	 * @param LabelData $labelData - LabelData-Object to add
 	 */
-	private function addLabelData($labelData) {
+	public function addLabelData($labelData) {
 		$this->labelData[] = $labelData;
 	}
 
@@ -314,10 +295,25 @@ class Response extends Version implements LabelResponse {
 	}
 
 	/**
+	 * @return string|null
+	 */
+	public function getBlockType(): ?string
+	{
+		return $this->blockType;
+	}
+
+	/**
+	 * @param string|null $blockType
+	 */
+	public function setBlockType(?string $blockType): void
+	{
+		$this->blockType = $blockType;
+	}
+	/**
 	 * Check if the current Status-Code is correct and set the correct one if not
 	 */
-	private function validateStatusCode() {
-		if($this->getStatusCode() === self::DHL_ERROR_NO_ERROR && $this->getStatusText() !== 'ok')
+	public function validateStatusCode() {
+		if($this->getStatusCode() === self::DHL_ERROR_NO_ERROR && $this->getStatusText() !== 'OK')
 			$this->setStatusCode(self::DHL_ERROR_WEAK_WARNING);
 
 		// Fix the DHL-Error Weak-Warning-Bug
@@ -325,7 +321,7 @@ class Response extends Version implements LabelResponse {
 			// ALWAYS uses the Shipment-Response when only 1
 			$this->setStatusCode($this->getLabelData(0)->getStatusCode());
 			$this->setStatusText($this->getLabelData(0)->getStatusText());
-			$this->setStatusMessage($this->getLabelData(0)->getStatusMessage());
+			//$this->setStatusMessage($this->getLabelData(0)->getStatusMessage());
 		} else if($this->getStatusCode() === self::DHL_ERROR_WEAK_WARNING) {
 			$noError = true;
 
@@ -342,7 +338,7 @@ class Response extends Version implements LabelResponse {
 
 			if($noError) {
 				$this->setStatusCode(self::DHL_ERROR_NO_ERROR);
-				$this->setStatusText('ok');
+				$this->setStatusText('OK');
 				$this->setStatusMessage('Der Webservice wurde ohne Fehler ausgeführt.');
 			}
 		}
@@ -365,11 +361,9 @@ class Response extends Version implements LabelResponse {
 	 *
 	 * @param Object|array $possibleMultiLabelObject - Object or array, which should be added to LabelData
 	 */
-	private function handleMultiShipments($possibleMultiLabelObject) {
+	public function handleMultiShipments($possibleMultiLabelObject) {
 		if(is_array($possibleMultiLabelObject)) {
-			$multiLabelArray = $possibleMultiLabelObject;
-
-			foreach($multiLabelArray as &$singleLabel)
+			foreach($possibleMultiLabelObject as &$singleLabel)
 				$this->addLabelData(new LabelData($this->getVersion(), $singleLabel));
 		} else
 			$this->addLabelData(new LabelData($this->getVersion(), $possibleMultiLabelObject));
@@ -379,29 +373,47 @@ class Response extends Version implements LabelResponse {
 	 * Loads a DHL-Response into this Object
 	 *
 	 * @param Object $response - DHL-Response
+	 * @since 2.0
 	 */
-	private function loadResponse_v2($response) {
+	public function loadResponse_v3($response) {
 		// Set global Status-Values first
-		if(isset($response->Status)) {
-			if(isset($response->Status->statusCode))
-				$this->setStatusCode((int) $response->Status->statusCode);
-			if(isset($response->Status->statusText)) {
-				if(is_array($response->Status->statusText))
-					$this->setStatusText(implode(';', $response->Status->statusText));
+		if(isset($response->status)) {
+			if(isset($response->status->statusCode ))
+				$this->setStatusCode((int) $response->status->statusCode);
+			if(!isset($response->status->statusCode ))
+				$this->setStatusCode((int) $response->status);
+			if(isset($response->status->title)) {
+				if(is_array($response->status->title))
+					$this->setStatusText(implode(';', $response->status->title));
 				else
-					$this->setStatusText($response->Status->statusText);
+					$this->setStatusText($response->status->title);
 			}
-			if(isset($response->Status->statusMessage)) {
-				if(is_array($response->Status->statusMessage))
-					$this->setStatusMessage(implode(';', $response->Status->statusMessage));
+			if(!isset($response->status->title))
+				$this->setStatusText($response->title);
+			if(isset($response->status->detail)) {
+				if(is_array($response->status->detail))
+					$this->setStatusMessage(implode(';', $response->status->detail));
 				else
-					$this->setStatusMessage($response->Status->statusMessage);
+					$this->setStatusMessage($response->status->detail);
 			}
+			if(!isset($response->status->detail))
+				$this->setStatusMessage($response->detail);
+			if(isset($response->type))
+				$this->setBlockType($response->type);
+		} else if(isset($response->statusCode)) {
+			if(isset($response->statusCode ))
+				$this->setStatusCode((int) $response->statusCode);
+			if(isset($response->title))
+				$this->setStatusText($response->title);
+			if(isset($response->detail))
+				$this->setStatusMessage($response->detail);
 		}
 
+
+
 		// Set Manifest if exists (getManifest)
-		if(isset($response->manifestData)) {
-			$this->setManifestData($response->manifestData);
+		if(isset($response->manifest)) {
+			$this->setManifestData($response->manifest);
 
 			return;
 		}
@@ -416,8 +428,8 @@ class Response extends Version implements LabelResponse {
 		 * 5 -> getExportDoc
 		 * 6 -> doManifest
 		 */
-		if(isset($response->CreationState)) // 1
-			$this->handleMultiShipments($response->CreationState);
+		if(isset($response->items)) // 1
+			$this->handleMultiShipments($response->items);
 		else if(isset($response->DeletionState)) // 2
 			$this->handleMultiShipments($response->DeletionState);
 		else if(isset($response->LabelData)) // 3
@@ -426,11 +438,13 @@ class Response extends Version implements LabelResponse {
 			$this->handleMultiShipments($response->ValidationState);
 		else if(isset($response->ExportDocData)) // 5
 			$this->handleMultiShipments($response->ExportDocData);
-		else if(isset($response->ManifestState)) // 6
-			$this->handleMultiShipments($response->ManifestState);
+		else if(isset($response->ManifestDate)) // 6
+			$this->handleMultiShipments($response);
 
 		// Validate the status to fix errors on the Main-Status and show weak-warnings
-		if($this->getStatusCode() !== self::DHL_ERROR_NOT_SET)
-			$this->validateStatusCode();
+		//if($this->getStatusCode() !== self::DHL_ERROR_NOT_SET)
+		//	$this->validateStatusCode();
 	}
+
+
 }
