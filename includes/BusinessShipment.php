@@ -469,7 +469,6 @@ class BusinessShipment extends Version {
 		$data['shipmentNumbers'] = array($shipmentNumbers); // include or URL
 		$data['billingNumber'] = $billingNumber;
 
-		print_r($data);
 		$curl = curl_init();
 		curl_setopt_array($curl, [
 			CURLOPT_URL => $location."manifests?".$addstring,
@@ -497,7 +496,6 @@ class BusinessShipment extends Version {
 			echo "cURL Error #:" . $err;
 		} else {
 			$response = json_decode(json_encode(json_decode($response, true)));
-			print_r($response);
 			return new Response($this->getVersion(), $response);
 		}
 		return new Response($this->getVersion(), $response);
@@ -728,7 +726,7 @@ class BusinessShipment extends Version {
 		$query['printFormat'] = $this->getLabelFormat()->getLabelFormat(); // see https://developer.dhl.com/api-reference/parcel-de-shipping-post-parcel-germany-v2#operations-Shipments_and_Labels-createOrders
 		$query['retourePrintFormat'] = $this->getLabelFormat()->getLabelFormatRetoure(); // see https://developer.dhl.com/api-reference/parcel-de-shipping-post-parcel-germany-v2#operations-Shipments_and_Labels-createOrders
 		$query['combine'] = $this->getLabelFormat()->getCombinedPrinting(); // true or false
-echo $location."orders?".http_build_query($query);
+
 		$curl = curl_init();
 		curl_setopt_array($curl, [
 			CURLOPT_URL => $location."orders?".http_build_query($query),

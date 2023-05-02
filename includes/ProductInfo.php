@@ -262,7 +262,6 @@ class ProductInfo {
 
 		$obj = new Product(Shipments::PRODUCT_TYPE_AUSTRIA_PACKAGE);
 		$obj->setName('DHL Paket Austria');
-		$obj->setAustria(true);
 		$obj->setMinLength(15);
 		$obj->setMaxLength(120);
 		$obj->setMinWidth(11);
@@ -279,7 +278,6 @@ class ProductInfo {
 
 		$obj = new Product(Shipments::PRODUCT_TYPE_CONNECT_PACKAGE);
 		$obj->setName('DHL Paket Connect');
-		$obj->setAustria(true);
 		$obj->setMinLength(15);
 		$obj->setMaxLength(120);
 		$obj->setMinWidth(11);
@@ -296,7 +294,6 @@ class ProductInfo {
 
 		$obj = new Product(Shipments::PRODUCT_TYPE_AUSTRIA_INTERNATIONAL_PACKAGE);
 		$obj->setName('DHL Paket International');
-		$obj->setAustria(true);
 		$obj->setMinLength(15);
 		$obj->setMaxLength(120);
 		$obj->setMinWidth(11);
@@ -317,7 +314,7 @@ class ProductInfo {
 	 *
 	 * @return bool - Is this Object initiated
 	 */
-	private static function isInit() {
+	public static function isInit() {
 		return self::$init;
 	}
 
@@ -326,7 +323,7 @@ class ProductInfo {
 	 *
 	 * @param bool $init - Is this Object initiated
 	 */
-	private static function setInit($init) {
+	public static function setInit($init) {
 		self::$init = $init;
 	}
 
@@ -335,7 +332,7 @@ class ProductInfo {
 	 *
 	 * @return Product[] - DHL-Product-Objects
 	 */
-	private static function getDhlProducts() {
+	public static function getDhlProducts() {
 		if(! self::isInit())
 			self::init();
 

@@ -33,13 +33,6 @@ class Product {
 	private $name = '';
 
 	/**
-	 * Can this Product Send to Austria
-	 *
-	 * @var boolean $austria - Is send to Austria allowed
-	 */
-	private $austria = false;
-
-	/**
 	 * Contains the Min-Length of this Product
 	 *
 	 * @var float|int $minLength - Min-Length of this Product
@@ -134,28 +127,10 @@ class Product {
 	/**
 	 * Set the Name
 	 *
-	 * @param string $name1 - Name
+	 * @param string $name - Name
 	 */
-	public function setName1($name1) {
-		$this->name1 = $name1;
-	}
-
-	/**
-	 * Shows if send to Austria is allowed
-	 *
-	 * @return bool - Is send to Austria allowed
-	 */
-	public function isAustria() {
-		return $this->austria;
-	}
-
-	/**
-	 * Set if send to Austria is allowed
-	 *
-	 * @param bool $austria - Is send to Austria allowed
-	 */
-	public function setAustria($austria) {
-		$this->austria = $austria;
+	public function setName($name) {
+		$this->name = $name;
 	}
 
 	/**
