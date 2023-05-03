@@ -111,15 +111,14 @@ class  PostOffice extends Consignee {
 	public function getClass_v3(): stdClass
 	{
 		$class = new StdClass;
-		$class->PostOffice = new StdClass;
+		$class = new StdClass;
 
-		$class->PostOffice->name = $this->getName();
-		$class->PostOffice->email = $this->getEmail();
-		$class->PostOffice->retailID = $this->getRetailID();
-		$class->PostOffice->postNumber = $this->getPostNumber();
-		$class->PostOffice->postalCode = $this->getPostalCode();
-		$class->PostOffice->city = $this->getCity();
-		$class->PostOffice->country = $this->getCountry();
+		$class->name = $this->getName();
+		$class->email = $this->getEmail();
+		$class->retailID = $this->getRetailID();
+		$class->postalCode = $this->getPostalCode();
+		$class->city = $this->getCity();
+		$class->country = $this->getCountry();
 
 		return $class;
 	}

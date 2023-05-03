@@ -126,6 +126,18 @@ class Response extends Version implements LabelResponse {
 	}
 
 	/**
+	 * Getter for Shipment-Number
+	 *
+	 * @return null|string - Shipment-Number or null if not set
+	 */
+	public function getToken() {
+		if($this->countLabelData() > 0)
+			return $this->getLabelData(0)->getToken();
+
+		return null;
+	}
+
+	/**
 	 * Getter for Label
 	 *
 	 * @return null|string - Label URL/Base64-Data (Can also contain the return label) or null if not set

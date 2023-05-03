@@ -75,7 +75,7 @@ class LabelFormat {
 	 *
 	 * Note: Optional
 	 *
-	 * @var bool|null $combinedPrinting - Are both labels printed together (null uses default)
+	 * @var string|null $combinedPrinting - Are both labels printed together (null uses default)
 	 */
 	private $combinedPrinting = true;
 
@@ -145,7 +145,7 @@ class LabelFormat {
 	 *
 	 * @return bool|null - Should labels printed together | null uses default from DHL
 	 */
-	public function getCombinedPrinting(): ?bool {
+	public function getCombinedPrinting(): ?string {
 		return $this->combinedPrinting;
 	}
 
@@ -154,7 +154,7 @@ class LabelFormat {
 	 *
 	 * @param bool|null $combinedPrinting - Should labels printed together | null uses default from DHL
 	 */
-	public function setCombinedPrinting(?bool $combinedPrinting): void {
+	public function setCombinedPrinting(?string $combinedPrinting): void {
 		$this->combinedPrinting = $combinedPrinting;
 	}
 

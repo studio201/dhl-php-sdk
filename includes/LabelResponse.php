@@ -89,4 +89,12 @@ interface LabelResponse {
 	 * @return null|string - Cod-Label-URL/Base64-Data or null if not requested/set
 	 */
 	function getCodLabel();
+
+	/**
+	 * Getter for Token
+	 *
+	 * @return null|string - Cod-Label-URL/Base64-Data or null if not requested/set
+	 */
+	function getToken();
+
 }

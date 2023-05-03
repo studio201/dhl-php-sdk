@@ -110,18 +110,17 @@ class Locker extends Consignee {
 	public function getClass_v3(): stdClass
 	{
 		$class = new StdClass;
-		$class->name1 = $this->getName1();
+		$class->name = $this->getName1();
 
-		$class->Packstation = new StdClass;
-		$class->Packstation->postNumber = $this->getPostNumber();
-		$class->Packstation->packstationNumber = $this->getLockerID();
-		$class->Packstation->postalCode = $this->getPostalCode();
-		$class->Packstation->city = $this->getCity();
+		$class->postNumber = $this->getPostNumber();
+		$class->lockerID = $this->getLockerID();
+		$class->postalCode = $this->getPostalCode();
+		$class->city = $this->getCity();
 		if($this->getState() !== null)
-			$class->Packstation->state = $this->getState();
+			$class->state = $this->getState();
 
 		if($this->getCountry() !== null)
-			$class->Packstation->country = $this->getCountry();
+			$class->country = $this->getCountry();
 
 		return $class;
 	}

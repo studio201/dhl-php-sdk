@@ -80,7 +80,17 @@ $receiver->setState('State'); // You can set a Province here whenever you need i
 $receiver->setCountry('DEU');
 $receiver->setEmail('kruegge@gmx.de'); // Needed if you want inform the receiver via mail
 
-$returnReceiver = new ReturnReceiver(); // Needed if you want to print an return label
+//$returnReceiver = new ReturnReceiver(); // Needed if you want to print an return label
+//$returnReceiver->setBillingNumber($credentials->getEkp().'0702');
+//$returnReceiver->setName1('Test Empfänger');
+//$returnReceiver->setAddressStreet('Kirchenheerweg');
+//$returnReceiver->setAddressHouse('23b');
+//$returnReceiver->setPostalCode('21037');
+//$returnReceiver->setCity('Hamburg');
+//$returnReceiver->setState('State'); // You can set a Province here whenever you need it
+//$returnReceiver->setCountry('DEU');
+//$service->setDhlRetoure($returnReceiver);
+
 // If want to use it, please set Address etc of the return receiver to!
 
 $customs = new Customs(); // Needed if you want to send out of europe, also add items
@@ -117,7 +127,7 @@ $labelFormat = new LabelFormat();
  */
 $labelFormat->setLabelFormat(null);
 $labelFormat->setLabelFormatRetoure(null);
-$labelFormat->setCombinedPrinting(true); // Here you can set if all labels should printed together (if you have multiple)
+$labelFormat->setCombinedPrinting('false'); // Here you can set if all labels should printed together (if you have multiple)
 $labelFormat->setLabelResponseType("URL"); // URL or INCLUDE
 $labelFormat->setDocFormat("PDF");
 

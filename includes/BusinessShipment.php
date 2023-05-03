@@ -567,7 +567,7 @@ class BusinessShipment extends Version {
 	}
 
 	/**
-	 * Alias for deleteShipmentOrder
+	 * deleteShipmentOrder
 	 *
 	 * Deletes a Shipment
 	 *
@@ -675,6 +675,49 @@ class BusinessShipment extends Version {
 		} else {
 			$response = json_decode(json_encode(json_decode($response, true)));
 			return new Response($this->getVersion(), $response);
+		}
+		return new Response($this->getVersion(), $response);
+	}
+
+
+	/**
+	 * getLabel
+	 *
+	 * Requests raw Data of Shipment-Label again
+	 *
+	 * @param string|string[] $token - token from a label url
+	 * @return Response - Response or false on error
+	 */
+	public function getLabel($token) {
+		if($this->isTest())
+			$location = self::DHL_SANDBOX_URL;
+		else
+			$location = self::DHL_PRODUCTION_URL;
+
+		$curl = curl_init();
+		curl_setopt_array($curl, [
+			CURLOPT_URL => $location.'labels?token='.$token,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_USERPWD => $this->getCredentials()->getUser() . ':' . $this->getCredentials()->getPassword(),
+			CURLOPT_CUSTOMREQUEST => "GET",
+			CURLOPT_HTTPHEADER => [
+				"Accept: application/pdf",
+				"Accept-Language: de-DE",
+			],
+		]);
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+		curl_close($curl);
+
+		if ($err) {
+			echo "cURL Error #:" . $err;
+		} else {
+			return $response;
 		}
 		return new Response($this->getVersion(), $response);
 	}

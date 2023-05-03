@@ -89,6 +89,8 @@ class LabelData extends Version implements LabelResponse {
 	private $codLabelFormat = null;
 
 	private $shipmentRefNo = null;
+
+	private $token = null;
 	/**
 	 * LabelData constructor.
 	 *
@@ -362,6 +364,22 @@ class LabelData extends Version implements LabelResponse {
 	}
 
 	/**
+	 * @return null
+	 */
+	public function getToken()
+	{
+		return $this->token;
+	}
+
+	/**
+	 * @param null $token
+	 */
+	public function setToken($token): void
+	{
+		$this->token = $token;
+	}
+
+	/**
 	 * Set all Values of the LabelResponse to this Object
 	 *
 	 * @param Object $response - LabelData-Response
@@ -370,27 +388,27 @@ class LabelData extends Version implements LabelResponse {
 	public function loadLabelData_v3($response) {
 
 		// Get Sequence-Number
-		if(isset($response->shipmentRefNo))
-			$this->setShipmentRefNo((string) $response->shipmentRefNo);
+		if (isset($response->shipmentRefNo))
+			$this->setShipmentRefNo((string)$response->shipmentRefNo);
 
 		// Get Status
-		if(isset($response->sstatus)) {
-			if(isset($response->sstatus->statusCode))
-				$this->setStatusCode((int) $response->sstatus->statusCode);
-			if(isset($response->sstatus->title)) {
-				if(is_array($response->sstatus->title))
+		if (isset($response->sstatus)) {
+			if (isset($response->sstatus->statusCode))
+				$this->setStatusCode((int)$response->sstatus->statusCode);
+			if (isset($response->sstatus->title)) {
+				if (is_array($response->sstatus->title))
 					$this->setStatusText(implode(';', $response->sstatus->title));
 				else
 					$this->setStatusText($response->sstatus->title);
 			}
-			if(isset($response->sstatus->detail)) {
-				if(is_array($response->sstatus->detail))
+			if (isset($response->sstatus->detail)) {
+				if (is_array($response->sstatus->detail))
 					$this->setStatusText(implode(';', $response->sstatus->detail));
 				else
 					$this->setStatusText($response->sstatus->detail);
 			}
-			if(isset($response->validationMessages)) {
-				if(is_array($response->validationMessages))
+			if (isset($response->validationMessages)) {
+				if (is_array($response->validationMessages))
 					$this->setStatusMessage(implode('; ', array_map(function ($entry) {
 						return $entry->validationMessage;
 					}, $response->validationMessages)));
@@ -401,14 +419,14 @@ class LabelData extends Version implements LabelResponse {
 			$this->validateStatusCode();
 		} else {
 			// Error Labels
-			if(isset($response->propertyPath)) {
-				if(is_array($response->propertyPath))
+			if (isset($response->propertyPath)) {
+				if (is_array($response->propertyPath))
 					$this->setStatusText(implode(';', $response->propertyPath));
 				else
 					$this->setStatusText($response->propertyPath);
 			}
-			if(isset($response->message)) {
-				if(is_array($response->message))
+			if (isset($response->message)) {
+				if (is_array($response->message))
 					$this->setStatusMessage(implode(';', $response->message));
 				else
 					$this->setStatusMessage($response->message);
@@ -416,12 +434,15 @@ class LabelData extends Version implements LabelResponse {
 		}
 
 		// Get Shipment-Number
-		if(isset($response->shipmentNo))
-			$this->setShipmentNumber((string) $response->shipmentNo);
+		if (isset($response->shipmentNo))
+			$this->setShipmentNumber((string)$response->shipmentNo);
 
 		// Get Label-Data
-		if(isset($response->label->url))
+		if (isset($response->label->url)) {
 			$this->setLabel($response->label->url);
+			$this->setToken(substr(parse_url($response->label->url)['query'],6));
+		}
+
 		else if(isset($response->label->b64))
 			$this->setLabel($response->label->b64);
 		else if(isset($response->label->zpl2))
