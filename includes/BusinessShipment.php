@@ -386,10 +386,11 @@ class BusinessShipment extends Version {
 	/**
 	 * Creates the getManifest-Request
 	 *
+	 * @param string|string[] $billingNumber - Billingnumber you want to get the manifest for
 	 * @param string|string[] $date - Shipment-Number(s) for Manifest (up to 30 Numbers)
 	 * @return Response - false on error or DHL-Response Object
 	 */
-	public function getManifest($date=null, $billingNumber ) {
+	public function getManifest($billingNumber, $date=null ) {
 
 		if($this->isTest())
 			$location = self::DHL_SANDBOX_URL;
@@ -435,10 +436,11 @@ class BusinessShipment extends Version {
 	/**
 	 * Creates the getManifest-Request
 	 *
-	 * @param string|int $shipmentnumbers - Manifest-Date as String (YYYY-MM-DD) or the int time() value of the date
+	 * @param string|int $shipmentNumbers - Shippingnumbers where Manifest do for
+	 * @param string|int $billingNumber - Billingnumber where Manifest do for
 	 * @return Response - false on error or DHL-Response Object
 	 */
-	public function doManifest($shipmentNumbers=null, $billingNumber) {
+	public function doManifest($billingNumber, $shipmentNumbers=null) {
 
 		if($this->isTest())
 			$location = self::DHL_SANDBOX_URL;

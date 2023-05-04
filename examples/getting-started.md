@@ -397,10 +397,10 @@ It works like deleting Shipments:
 $dhl = new \Jahn\DHL\BusinessShipment($credentials);
 
 // Do the Manifest-Request for ONE Shipment
-$response = $dhl->doManifest(null, $credentials->getEkp(10) . '0102');  // Does Manifest all open Shipments
+$response = $dhl->doManifest($credentials->getEkp(10) . '0102');  // Does Manifest all open Shipments
 
 // MULTI-Request (up to 30)
-$response = $dhl->doManifest(array('shipment_number1', 'shipment_number2'), $credentials->getEkp(10) . '0102')); // Does Manifest specified Shipments
+$response = $dhl->doManifest($credentials->getEkp(10) . '0102', array('shipment_number1', 'shipment_number2'))); // Does Manifest specified Shipments
 ```
 
 If the request failed, you get `false` else a `\Jahn\DHL\Response` Object.
@@ -429,7 +429,7 @@ The syntax is quite simple, you just need to specify the date where you want to 
 $dhl = new \Jahn\DHL\BusinessShipment($credentials);
 
 // Request to get the manifest from a specific date, the date can be given with an ISO-Date String (YYYY-MM-DD) or with the `time()` value of the day
-$response = $dhl->getManifest('2018-08-06', $credentials->getEkp(10) . '0102');
+$response = $dhl->getManifest($credentials->getEkp(10) . '0102', '2018-08-06');
 ```
 
 If the request failed, you get `false` else a `\Jahn\DHL\Response` Object.
