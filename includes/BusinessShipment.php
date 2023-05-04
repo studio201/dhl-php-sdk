@@ -384,21 +384,6 @@ class BusinessShipment extends Version {
 	}
 
 	/**
-	 * Creates the sendDoManifestRequest-Request via SOAP
-	 *
-	 * @param Object|array $data - Manifest-Data
-	 * @return Object - DHL-Response
-	 */
-	public function sendDoManifestRequest($data) {
-		switch($this->getMayor()) {
-			case 1:
-			case 2:
-			default:
-				return $this->getSoapClient()->doManifest($data);
-		}
-	}
-
-	/**
 	 * Creates the getManifest-Request
 	 *
 	 * @param string|string[] $date - Shipment-Number(s) for Manifest (up to 30 Numbers)
@@ -749,7 +734,7 @@ class BusinessShipment extends Version {
 	}
 
 	/**
-	 * Requests the Validation of a Shipment via SOAP
+	 * Requests the Validation of a Shipment
 	 *
 	 * @param Object|array $data - Shipment-Data
 	 * @return Object - DHL-Response
@@ -800,63 +785,5 @@ class BusinessShipment extends Version {
 			return new Response($this->getVersion(), $response);
 		}
 		return new Response($this->getVersion(), $response);
-	}
-
-	/**
-	 * Updates the Shipment-Request
-	 *
-	 * @param string $shipmentNumber - Number of the Shipment, which should be updated
-	 * @return bool|Response - false on error or DHL-Response Object
-	 */
-	public function updateShipmentOrder($shipmentNumber) {
-		if(is_array($shipmentNumber) || $this->countShipments() > 1) {
-			$this->addError(__FUNCTION__ . ': Updating Shipments is a Single-Operation only!');
-
-			return false;
-		}
-
-		switch($this->getMayor()) {
-			case 1:
-				return false;
-			case 2:
-			default:
-			$data = $this->createShipmentClass_v3($shipmentNumber);
-
-			// Fix for shipmentOrder update, no array accepted because single operation only
-			$data->Shipments = $data->Shipments[0];
-		}
-
-		$response = null;
-
-		// Create Shipment
-		try {
-			$response = $this->sendUpdateRequest($data);
-		} catch(Exception $e) {
-			$this->addError($e->getMessage());
-
-			return false;
-		}
-
-		if(is_soap_fault($response)) {
-			$this->addError($response->faultstring);
-
-			return false;
-		} else
-			return new Response($this->getVersion(), $response);
-	}
-
-	/**
-	 * Requests the Update of a Shipment via SOAP
-	 *
-	 * @param Object|array $data - Shipment-Data
-	 * @return Object - DHL-Response
-	 */
-	public function sendUpdateRequest($data) {
-		switch($this->getMayor()) {
-			case 1:
-			case 2:
-			default:
-				return $this->getSoapClient()->updateShipmentOrder($data);
-		}
 	}
 }

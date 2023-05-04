@@ -204,13 +204,13 @@ class Response extends Version implements LabelResponse {
 	}
 
 	/**
-	 * Getter for Sequence-Number
+	 * Getter for Shipment Ref Number
 	 *
 	 * @return string|null - Sequence-Number of the Request or null if not set
 	 */
 	public function getShipmentRefNo() {
 		if($this->countLabelData() > 0)
-			return $this->getLabelData(0)->getShipmentRefNo;
+			return $this->getLabelData(0)->getShipmentRefNo();
 
 		return null;
 	}
