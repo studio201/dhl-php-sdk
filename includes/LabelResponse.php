@@ -56,6 +56,13 @@ interface LabelResponse {
 	function getShipmentRefNo();
 
 	/**
+	 * Getter for Return-Shipment-Number
+	 *
+	 * @return null|string - Shipment-Number or null if not set
+	 */
+	function getReturnShipmentNumber();
+
+	/**
 	 * Getter for Shipment-Number
 	 *
 	 * @return null|string - Shipment-Number or null if not set

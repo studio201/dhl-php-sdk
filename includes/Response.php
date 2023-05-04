@@ -126,9 +126,21 @@ class Response extends Version implements LabelResponse {
 	}
 
 	/**
-	 * Getter for Shipment-Number
+	 * Getter for Return-Shipment-Number
 	 *
-	 * @return null|string - Shipment-Number or null if not set
+	 * @return null|string - Return-Shipment-Number or null if not set
+	 */
+	public function getReturnShipmentNumber() {
+		if($this->countLabelData() > 0)
+			return $this->getLabelData(0)->getReturnShipmentNumber();
+
+		return null;
+	}
+
+	/**
+	 * Getter for Token
+	 *
+	 * @return null|string - Token or null if not set
 	 */
 	public function getToken() {
 		if($this->countLabelData() > 0)
