@@ -111,7 +111,6 @@ class  PostOffice extends Consignee {
 	public function getClass_v3(): stdClass
 	{
 		$class = new StdClass;
-		$class = new StdClass;
 
 		$class->name = $this->getName();
 		$class->email = $this->getEmail();

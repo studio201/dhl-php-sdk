@@ -121,7 +121,7 @@ class Product {
 	 * @return string - Name
 	 */
 	public function getName() {
-		return $this->name1;
+		return $this->name;
 	}
 
 	/**

@@ -202,7 +202,7 @@ class LabelData extends Version implements LabelResponse {
 	/**
 	 * Setter for Sequence-Number
 	 *
-	 * @param string|null $ShipmentRefNo - Sequence-Number of the Request or null for not set
+	 * @param string|null $shipmentRefNo - Sequence-Number of the Request or null for not set
 	 */
 	public function setShipmentRefNo($shipmentRefNo) {
 		$this->shipmentRefNo = $shipmentRefNo;
