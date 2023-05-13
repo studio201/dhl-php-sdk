@@ -421,11 +421,18 @@ class BusinessShipment extends Version {
 
 		$response = curl_exec($curl);
 		$err = curl_error($curl);
-
 		curl_close($curl);
 
+		if (strpos($response, "502 Bad Gateway") !== false) {
+			error_log(print_r($response,true));
+			$this->addError(__FUNCTION__ . ': 502 Bad Gateway!');
+			return false;
+		}
+
 		if ($err) {
-			echo "cURL Error #:" . $err;
+			error_log("cURL Error #:" . $err );
+			$this->addError(__FUNCTION__ . ': '.$err);
+			return false;
 		} else {
 			$response = json_decode(json_encode(json_decode($response, true)));
 			return new Response($this->getVersion(), $response);
@@ -476,11 +483,18 @@ class BusinessShipment extends Version {
 
 		$response = curl_exec($curl);
 		$err = curl_error($curl);
-
 		curl_close($curl);
 
+		if (strpos($response, "502 Bad Gateway") !== false) {
+			error_log(print_r($response,true));
+			$this->addError(__FUNCTION__ . ': 502 Bad Gateway!');
+			return false;
+		}
+
 		if ($err) {
-			echo "cURL Error #:" . $err;
+			error_log("cURL Error #:" . $err );
+			$this->addError(__FUNCTION__ . ': '.$err);
+			return false;
 		} else {
 			$response = json_decode(json_encode(json_decode($response, true)));
 			return new Response($this->getVersion(), $response);
@@ -597,8 +611,16 @@ class BusinessShipment extends Version {
 		$err = curl_error($curl);
 		curl_close($curl);
 
+		if (strpos($response, "502 Bad Gateway") !== false) {
+			error_log(print_r($response,true));
+			$this->addError(__FUNCTION__ . ': 502 Bad Gateway!');
+			return false;
+		}
+
 		if ($err) {
-			echo "cURL Error #:" . $err;
+			error_log("cURL Error #:" . $err );
+			$this->addError(__FUNCTION__ . ': '.$err);
+			return false;
 		} else {
 			$response = json_decode(json_encode(json_decode($response, true)));
 			return new Response($this->getVersion(), $response);
@@ -657,8 +679,16 @@ class BusinessShipment extends Version {
 		$err = curl_error($curl);
 		curl_close($curl);
 
+		if (strpos($response, "502 Bad Gateway") !== false) {
+			error_log(print_r($response,true));
+			$this->addError(__FUNCTION__ . ': 502 Bad Gateway!');
+			return false;
+		}
+
 		if ($err) {
-			echo "cURL Error #:" . $err;
+			error_log("cURL Error #:" . $err );
+			$this->addError(__FUNCTION__ . ': '.$err);
+			return false;
 		} else {
 			$response = json_decode(json_encode(json_decode($response, true)));
 			return new Response($this->getVersion(), $response);
@@ -701,10 +731,19 @@ class BusinessShipment extends Version {
 		$err = curl_error($curl);
 		curl_close($curl);
 
+		if (strpos($response, "502 Bad Gateway") !== false) {
+			error_log(print_r($response,true));
+			$this->addError(__FUNCTION__ . ': 502 Bad Gateway!');
+			return false;
+		}
+
 		if ($err) {
-			echo "cURL Error #:" . $err;
+			error_log("cURL Error #:" . $err );
+			$this->addError(__FUNCTION__ . ': '.$err);
+			return false;
 		} else {
-			return $response;
+			$response = json_decode(json_encode(json_decode($response, true)));
+			return new Response($this->getVersion(), $response);
 		}
 		return new Response($this->getVersion(), $response);
 	}
@@ -777,11 +816,18 @@ class BusinessShipment extends Version {
 
 		$response = curl_exec($curl);
 		$err = curl_error($curl);
-
 		curl_close($curl);
 
+		if (strpos($response, "502 Bad Gateway") !== false) {
+			error_log(print_r($response,true));
+			$this->addError(__FUNCTION__ . ': 502 Bad Gateway!');
+			return false;
+		}
+
 		if ($err) {
-			echo "cURL Error #:" . $err;
+			error_log("cURL Error #:" . $err );
+			$this->addError(__FUNCTION__ . ': '.$err);
+			return false;
 		} else {
 			$response = json_decode(json_encode(json_decode($response, true)));
 			return new Response($this->getVersion(), $response);
