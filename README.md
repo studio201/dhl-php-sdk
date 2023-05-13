@@ -1,6 +1,6 @@
 # DHL PHP SDK
 
-This *unofficial* library is wrapping some functions of the DHL SOAP API in order to easy create/delete shipments and labels.
+This *unofficial* library is wrapping some functions of the DHL REST API in order to easy create/delete shipments and labels.
 
 ## Requirements
 
