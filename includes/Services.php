@@ -63,6 +63,7 @@ class Services {
 	private ?bool $postalDeliveryDutyPaid = null;
 	private ?float $value = null;
 	private ?string $currency = null;
+	private ?bool $signedForByRecipient = null;
 
 	/**
 	 * Contains the Age that the Receiver should be at least have
@@ -587,6 +588,22 @@ class Services {
 	}
 
 	/**
+	 * @return bool|null
+	 */
+	public function getSignedForByRecipient(): ?bool
+	{
+		return $this->signedForByRecipient;
+	}
+
+	/**
+	 * @param bool|null $signedForByRecipient
+	 */
+	public function setSignedForByRecipient(?bool $signedForByRecipient): void
+	{
+		$this->signedForByRecipient = $signedForByRecipient;
+	}
+
+	/**
 	 * Get the Class of this Service-Object
 	 *
 	 * @return StdClass - Service-DHL-Class
@@ -632,7 +649,10 @@ class Services {
 			$class->dhlRetoure = $this->getDhlRetoure()->getClass_v3();
 		if($this->getPostalDeliveryDutyPaid() !== null)
 			$class->postalDeliveryDutyPaid = $this->getPostalDeliveryDutyPaid();
+		if($this->getSignedForByRecipient()!== null)
+			$class->signedForReceipient = $this->getSignedForByRecipient();
 
 		return $class;
 	}
+
 }
