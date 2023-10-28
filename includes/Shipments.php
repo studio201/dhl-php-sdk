@@ -75,7 +75,7 @@ class Shipments {
 	 *
 	 * @var string $product - Product to use (Default: National Package)
 	 */
-	private string $product = self::PRODUCT_TYPE_NATIONAL_PACKAGE;
+	private  $product = self::PRODUCT_TYPE_NATIONAL_PACKAGE;
 
 	/**
 	 * Contains the Customer-Reference
@@ -87,7 +87,7 @@ class Shipments {
 	 *
 	 * @var string|null $refNo - Customer Reference or null for none
 	 */
-	private ?string $refNo = null;
+	private $refNo = null;
 
 	/**
 	 * Name of a cost center
@@ -100,7 +100,7 @@ class Shipments {
 	 * @var null|string $costCenter - Name of a Cost-Center or null for none
 	 * @since 3.0
 	 */
-	private ?string $costCenter = null;
+	private $costCenter = null;
 
 	/**
 	 * Contains the Return-Account-Number (EKP)
@@ -112,7 +112,7 @@ class Shipments {
 	 *
 	 * @var string|null $creationSoftware - creationSoftware or null for none
 	 */
-	private ?string $creationSoftware = null;
+	private $creationSoftware = null;
 
 	/**
 	 * Contains the Shipment-Date
@@ -124,9 +124,9 @@ class Shipments {
 	 *
 	 * @var string|null $shipDate - Shipment-Date or null for today (+1 Day if Sunday)
 	 */
-	private ?string $shipDate = null;
-	private ?Shipper $shipper = null;
-	private ?Consignee $consignee = null;
+	private  $shipDate = null;
+	private  $shipper = null;
+	private  $consignee = null;
 	/**
 	 * Contains the Shipment-Date
 	 *
@@ -137,7 +137,7 @@ class Shipments {
 	 *
 	 * @var Details|null $details - Service Object | null for none
 	 */
-	private ?Details $details = null;
+	private  $details = null;
 
 	/**
 	 * Contains the Service Object (Many settings for the Shipment)
@@ -146,7 +146,7 @@ class Shipments {
 	 *
 	 * @var Services|null $services - Service Object | null for none
 	 */
-	private ?Services $services = null;
+	private  $services = null;
 
 
 	/**
@@ -156,9 +156,9 @@ class Shipments {
 	 *
 	 * @var Customs|null $customs - Export-Document-Settings Object | null for none
 	 */
-	private ?Customs $customs = null;
+	private  $customs = null;
 
-	public ?string $billingNumber = null;
+	public   $billingNumber = null;
 
 	/**
 	 * Get which Product is used

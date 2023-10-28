@@ -82,7 +82,7 @@ class BusinessShipment extends Version {
 	 *
 	 * @var bool $test - Is Sandbox-Mode
 	 */
-	private bool $test;
+	private  $test;
 
 	// Object-Fields
 	/**

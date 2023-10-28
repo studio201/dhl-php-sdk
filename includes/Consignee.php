@@ -28,22 +28,22 @@ class Consignee extends SendPerson {
 	 * Min-Len: 1
 	 * Max-Len: 10
 	 *
-	 * @var locker $locker - locker
+	 * @var Locker $locker - locker
 	 */
-	private locker $locker;
+	private  $locker;
 
 	/**
-	 * @return locker|null
+	 * @return Locker|null
 	 */
-	public function getLocker(): ?locker
+	public function getLocker(): ?Locker
 	{
 		return $this->locker;
 	}
 
 	/**
-	 * @param locker|null $locker
+	 * @param Locker|null $locker
 	 */
-	public function setLocker(?locker $locker): void
+	public function setLocker(?Locker $locker): void
 	{
 		$this->locker = $locker;
 	}
